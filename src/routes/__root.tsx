@@ -12,6 +12,8 @@ import notificationCssUrl from '@mantine/notifications/styles.css?url';
 import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary';
 import { NotFound } from '~/components/NotFound';
 import { auth } from '~/lib/auth';
+import linksCssUrl from '~/styles/links-groups.css?url';
+import sidebarCssUrl from '~/styles/sidebar.css?url';
 import { keys } from '~/utils';
 import { seo } from '~/utils/seo';
 
@@ -43,6 +45,8 @@ export const Route = createRootRouteWithContext<{
     links: [
       { rel: 'stylesheet', href: mantineCssUrl },
       { rel: 'stylesheet', href: notificationCssUrl },
+      { rel: 'stylesheet', href: sidebarCssUrl },
+      { rel: 'stylesheet', href: linksCssUrl },
       {
         rel: 'apple-touch-icon',
         sizes: '180x180',
