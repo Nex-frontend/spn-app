@@ -34,10 +34,10 @@ const mockdataLink = [
 ];
 
 function DashboardLayout() {
-  const { user } = Route.useRouteContext();
+  const { user, fortnight } = Route.useRouteContext();
   // const { user } = Route.useLoaderData();
 
-  console.log({ user });
+  console.log({ user, fortnight });
   const linksN = mockdataLink.map((item) => <LinksGroup {...item} key={item.label} />);
 
   // console.log({ user });

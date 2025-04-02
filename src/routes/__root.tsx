@@ -9,6 +9,7 @@ import { Notifications } from '@mantine/notifications';
 import notificationCssUrl from '@mantine/notifications/styles.css?url';
 import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary';
 import { NotFound } from '~/components/NotFound';
+import { getFornight } from '~/server/features/controlProcessFortnight/functions/controlProcess.function';
 import { getUser } from '~/server/functions/auth/auth.function';
 import linksCssUrl from '~/styles/links-groups.css?url';
 import sidebarCssUrl from '~/styles/sidebar.css?url';
@@ -18,13 +19,25 @@ import { seo } from '~/utils/seo';
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   user: Awaited<ReturnType<typeof getUser>>;
+  fortnight: Awaited<ReturnType<typeof getFornight>>;
 }>()({
   beforeLoad: async ({ context }) => {
     const user = await context.queryClient.fetchQuery({
       queryKey: [keys.auth.AUTH_USER],
       queryFn: ({ signal }) => getUser({ signal }),
     });
-    return { user };
+
+    let fortnight: null | number = 0;
+    if (user) {
+      const test = await context.queryClient.fetchQuery({
+        queryKey: ['fortnight'],
+        queryFn: ({ signal }) => getFornight({ signal }),
+      });
+
+      fortnight = test;
+    }
+
+    return { user, fortnight };
   },
   head: () => ({
     meta: [

@@ -12,6 +12,7 @@ export const useAuth = () => {
     mutationFn: useServerFn(signIn),
     onSuccess: async () => {
       queryClient.resetQueries({ queryKey: [keys.auth.AUTH_USER] });
+      // queryClient.invalidateQueries({ queryKey: ['fortnight'] });
       await router.invalidate({ sync: true });
       router.navigate({ to: '/' });
     },
