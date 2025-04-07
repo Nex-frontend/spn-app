@@ -1,5 +1,5 @@
 import odbc from 'odbc';
-import { OdbcConnection } from './siapsep.interface';
+import { ExecuteProps, OdbcConnection } from './siapsep.interface';
 
 export class SiapsepConnection implements OdbcConnection {
   private connection: odbc.Connection | undefined;
@@ -11,22 +11,31 @@ export class SiapsepConnection implements OdbcConnection {
     this.connection = await odbc.connect('DSN=nomina3');
   }
 
-  async execute<T>(query: string, args: (string | number)[]) {
+  async prepareStatement<T>({ query, args }: ExecuteProps) {
     await this.connect();
 
     try {
       const statement = await this.connection!.createStatement();
       await statement.prepare(query);
-      // if (args) {
-      await statement.bind([...args]);
-      // }
+      if (args) {
+        await statement.bind([...args]);
+      }
       const result = await statement.execute<T>();
-      // await Promise.all([statement.close(), this.connection!.close()]);
       statement.close();
 
       return result;
     } catch (error) {
+      console.log({ siapsepDb: error });
       throw Error('Error en la conexión del SIAPSEP, favor de verificar el servidor');
     }
+  }
+
+  async execute<T>(props: ExecuteProps) {
+    return await this.prepareStatement<T>(props);
+  }
+
+  async executeSingle<T>(props: ExecuteProps) {
+    const data = await this.prepareStatement<T>(props);
+    return data[0];
   }
 }

@@ -2,8 +2,9 @@ import { IconGauge, IconNotes } from '@tabler/icons-react';
 import { createFileRoute, Outlet, redirect, useRouter } from '@tanstack/react-router';
 import { AppShell, Burger, Group, ScrollArea } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { SignOut } from '~/components/auth/';
-import { FeaturesCard, LinksGroup } from '~/components/ui';
+import { SignOut } from '~/features/auth';
+import { InititalSiapsep } from '~/features/controlProcess';
+import { FeaturesCard, LinksGroup } from '~/features/ui';
 
 export const Route = createFileRoute('/_auth')({
   component: DashboardLayout,
@@ -34,10 +35,9 @@ const mockdataLink = [
 ];
 
 function DashboardLayout() {
-  const { user, fortnight } = Route.useRouteContext();
+  // const { user, initialSiapsep } = Route.useRouteContext();
   // const { user } = Route.useLoaderData();
 
-  console.log({ user, fortnight });
   const linksN = mockdataLink.map((item) => <LinksGroup {...item} key={item.label} />);
 
   // console.log({ user });
@@ -60,6 +60,8 @@ function DashboardLayout() {
           <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
           <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" />
           {/* <MantineLogo size={30} /> */}
+          {/* {initialSiapsep.online && initialSiapsep.ordinaryFortnight?.fortnight} */}
+          <InititalSiapsep />
           <Group h="100%" gap={0} visibleFrom="sm">
             <FeaturesCard />
           </Group>

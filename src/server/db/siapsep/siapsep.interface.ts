@@ -4,6 +4,12 @@ export interface PrismaConnection<T> {
   get client(): T;
 }
 
+export interface ExecuteProps {
+  query: string;
+  args?: (string | number)[];
+}
+
 export interface OdbcConnection {
-  execute: (query: string, args: (string | number)[]) => Promise<odbc.Result<unknown>>;
+  execute: ({ query, args }: ExecuteProps) => Promise<odbc.Result<unknown>>;
+  executeSingle: ({ query, args }: ExecuteProps) => Promise<unknown>;
 }

@@ -1,10 +1,24 @@
 import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
 import { createRouter as createTanStackRouter } from '@tanstack/react-router';
 import { routerWithQueryClient } from '@tanstack/react-router-with-query';
-import { DefaultCatchBoundary } from './components/DefaultCatchBoundary';
-import { NotFound } from './components/NotFound';
+import { DefaultCatchBoundary } from './features/core/components/DefaultCatchBoundary';
+import { NotFound } from './features/core/components/NotFound';
 import { routeTree } from './routeTree.gen';
 import { toast } from './utils';
+
+const initialSiapsep = {
+  online: false,
+  error: true,
+  ordinaryFortnight: {
+    fortnight: 0,
+    status: '',
+  },
+  currentFortnight: {
+    fortnight: 0,
+    consecutive: 0,
+    status: '',
+  },
+};
 
 export function createRouter() {
   const queryClient = new QueryClient({
@@ -22,7 +36,11 @@ export function createRouter() {
     }),
     mutationCache: new MutationCache({
       onError: (error) => {
+        console.log({ error });
         return toast.error(error.message);
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries();
       },
     }),
   });
@@ -30,7 +48,7 @@ export function createRouter() {
   return routerWithQueryClient(
     createTanStackRouter({
       routeTree,
-      context: { queryClient, user: null, fortnight: null },
+      context: { queryClient, user: null, initialSiapsep },
       defaultPreload: 'intent',
       // react-query will handle data fetching & caching
       // https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#passing-all-loader-events-to-an-external-cache

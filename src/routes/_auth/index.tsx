@@ -5,5 +5,9 @@ export const Route = createFileRoute('/_auth/')({
 });
 
 function RouteComponent() {
-  return <div>Hello "/_auth/"!</div>;
+  return (
+    <div>
+      Hello <span className="font-bold">Hoisliwis</span>
+    </div>
+  );
 }

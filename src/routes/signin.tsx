@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { Container, Paper, Title } from '@mantine/core';
-import { SigninForm } from '~/components/auth';
+import { SigninForm } from '~/features/auth';
 
 const REDIRECT_URL = '/';
 

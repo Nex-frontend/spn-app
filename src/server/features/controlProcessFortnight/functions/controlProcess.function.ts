@@ -1,7 +1,6 @@
 import { createServerFn } from '@tanstack/react-start';
-import { getLastFortnight } from '~/server/useCases/siapsep/controlProcessFortnight/getLastFortnight.case';
+import { controlProcess } from '../index';
 
-export const getFornight = createServerFn().handler(async () => {
-  const data = await getLastFortnight();
-  return data[0].qna_proc;
+export const getFortnight = createServerFn().handler(async () => {
+  return await controlProcess.cases.getSiapsepInitialData();
 });

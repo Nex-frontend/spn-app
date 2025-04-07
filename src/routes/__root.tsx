@@ -7,37 +7,30 @@ import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/c
 import mantineCssUrl from '@mantine/core/styles.css?url';
 import { Notifications } from '@mantine/notifications';
 import notificationCssUrl from '@mantine/notifications/styles.css?url';
-import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary';
-import { NotFound } from '~/components/NotFound';
-import { getFornight } from '~/server/features/controlProcessFortnight/functions/controlProcess.function';
-import { getUser } from '~/server/functions/auth/auth.function';
+import { authQueryOptions } from '~/features/auth';
+import { controlProcessQueryOptions } from '~/features/controlProcess';
+import { DefaultCatchBoundary, NotFound } from '~/features/core';
+import { serverFn } from '~/server/functions';
+// import appCssUrl from '~/styles/app.css?url';
+import '~/styles/app.css';
+
 import linksCssUrl from '~/styles/links-groups.css?url';
 import sidebarCssUrl from '~/styles/sidebar.css?url';
-import { keys } from '~/utils';
 import { seo } from '~/utils/seo';
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
-  user: Awaited<ReturnType<typeof getUser>>;
-  fortnight: Awaited<ReturnType<typeof getFornight>>;
+  user: Awaited<ReturnType<typeof serverFn.auth.getUser>>;
+  initialSiapsep: Awaited<ReturnType<typeof serverFn.controlProcess.getFortnight>>;
 }>()({
   beforeLoad: async ({ context }) => {
-    const user = await context.queryClient.fetchQuery({
-      queryKey: [keys.auth.AUTH_USER],
-      queryFn: ({ signal }) => getUser({ signal }),
-    });
+    const user = await context.queryClient.fetchQuery(authQueryOptions());
 
-    let fortnight: null | number = 0;
-    if (user) {
-      const test = await context.queryClient.fetchQuery({
-        queryKey: ['fortnight'],
-        queryFn: ({ signal }) => getFornight({ signal }),
-      });
+    const initialSiapsep = await context.queryClient.fetchQuery(
+      controlProcessQueryOptions({ enabled: !!user })
+    );
 
-      fortnight = test;
-    }
-
-    return { user, fortnight };
+    return { user, initialSiapsep };
   },
   head: () => ({
     meta: [
@@ -58,6 +51,7 @@ export const Route = createRootRouteWithContext<{
       { rel: 'stylesheet', href: notificationCssUrl },
       { rel: 'stylesheet', href: sidebarCssUrl },
       { rel: 'stylesheet', href: linksCssUrl },
+      // { rel: 'stylesheet', href: appCssUrl },
       {
         rel: 'apple-touch-icon',
         sizes: '180x180',
