@@ -1,4 +1,4 @@
-import { ErrorApp } from './ErrorApp';
+import { ErrorApp } from './errorApp.entity';
 
 export const handlerError = (error: unknown) => {
   console.log({ serverError: error });

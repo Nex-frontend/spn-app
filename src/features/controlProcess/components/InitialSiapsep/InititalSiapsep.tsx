@@ -20,9 +20,12 @@ export const InititalSiapsep = () => {
       <BadgeFortnightSiapsep
         {...data.ordinaryFortnight}
         consecutive={0}
-        title="Ultima Nomina Ordinaria del Control Proceso"
+        title="Ultima Nomina Ordinaria del Control Proceso - SIAPSEP"
       />
-      <BadgeFortnightSiapsep {...data.currentFortnight} title="Nomina Actual de Control Proceso" />
+      <BadgeFortnightSiapsep
+        {...data.currentFortnight}
+        title="Nomina Actual de Control Proceso - SIAPSEP"
+      />
     </Group>
   );
 };

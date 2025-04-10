@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Group, HoverCard, List, Stack, Title } from '@mantine/core';
-import { AppBadge, IconError, IconSuccess, IconWrapper } from '~/features/ui';
+import { AppBadge, IconList } from '~/features/ui';
 
 interface Props {
   title: string;
@@ -20,22 +20,14 @@ export const BadgeFortnightSiapsep = ({ title, fortnight, status, consecutive, e
 
   const Icon = useMemo(() => {
     if (error) {
-      return (
-        <IconWrapper color="red" size={24} radius="xl">
-          <IconError size={16} />
-        </IconWrapper>
-      );
+      return <IconList type="error" />;
     }
-    return (
-      <IconWrapper color="teal" size={24} radius="xl">
-        <IconSuccess size={16} />
-      </IconWrapper>
-    );
+    return <IconList type="success" />;
   }, [error]);
 
   return (
     <Group justify="center">
-      <HoverCard width={280} shadow="md" withArrow arrowSize={10}>
+      <HoverCard width={280}>
         <HoverCard.Target>
           <AppBadge type={badgeType} size="lg">
             {badgeText}

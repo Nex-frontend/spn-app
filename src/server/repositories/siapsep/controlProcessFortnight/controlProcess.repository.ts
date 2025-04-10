@@ -1,13 +1,9 @@
+import {
+  GetCurrentFornightI,
+  GetLastSecondaryFortnightI,
+  GetOpenFornightsI,
+} from './controlProcess.interface';
 import { db } from '~/server/db';
-
-interface GetCurrentFornightI {
-  qna_proc: number | null;
-  estatus_proc: string | null;
-}
-
-type GetLastSecondaryFortnightI = Pick<GetCurrentFornightI, 'qna_proc'>;
-
-type GetOpenFornightsI = GetCurrentFornightI & { cons_qna_proc: number };
 
 export const getCurrentFortnight = async () => {
   return await db.siapsep.executeSingle<GetCurrentFornightI>({

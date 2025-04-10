@@ -38,7 +38,7 @@ const initialSicon = {
   module: {
     id: 0,
     status: '',
-    fortnight: 0,
+    fortnight: '',
     name: '',
   },
 };

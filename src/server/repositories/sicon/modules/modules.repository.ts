@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
-import { modulos } from '../../../db/sicon/schema';
 import { db } from '~/server/db';
+import { modulos } from '~/server/db/sicon/schema';
 
 export const getFortnightByModule = async (module: string) => {
   return await db.sicon

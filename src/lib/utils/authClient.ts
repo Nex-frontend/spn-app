@@ -11,6 +11,5 @@ import 'dotenv/config';
 
 export const authClient = createAuthClient({
   baseURL: process.env.BETTER_AUTH_URL!,
-  // baseURL: 'http://localhost:3000',
   plugins: [usernameClient()],
 });

@@ -1,11 +1,11 @@
-import { controlSicon } from '..';
+import { repository } from '~/server/repositories';
 
 const getErrorResponse = (error: string) => ({
   online: false,
   error,
   module: {
     id: 0,
-    fortnight: 0,
+    fortnight: '',
     status: '',
     name: '',
   },
@@ -15,7 +15,7 @@ export const getLoadTablesFortnight = async () => {
   const moduleName = 'cargar_tablas';
 
   try {
-    const siconModule = await controlSicon.repositories.getFortnightByModule(moduleName);
+    const siconModule = await repository.sicon.modules.getFortnightByModule(moduleName);
 
     if (siconModule.length === 0) {
       return getErrorResponse(`No se encontro el módulo de ${moduleName.replace('_', ' ')}`);

@@ -1,9 +1,9 @@
-import { controlProcess } from '../index';
+import { repository } from '~/server/repositories';
 
 const getLastOrdinaryFortnight = async () => {
   const [ordinary, secondary] = await Promise.all([
-    controlProcess.repositories.getCurrentFortnight(),
-    controlProcess.repositories.getLastSecondaryFortnight(),
+    repository.siapsep.controlProcess.getCurrentFortnight(),
+    repository.siapsep.controlProcess.getLastSecondaryFortnight(),
   ]);
 
   const { qna_proc: fortnight, estatus_proc: status } = ordinary;
@@ -28,7 +28,7 @@ const getLastOrdinaryFortnight = async () => {
 };
 
 const getCurrentOpenFortnight = async () => {
-  const currentFortnights = await controlProcess.repositories.getNoClosedFornight();
+  const currentFortnights = await repository.siapsep.controlProcess.getNoClosedFornight();
   const defaultValues = {
     fortnight: 0,
     status: '',
@@ -67,8 +67,10 @@ export const getSiapsepInitialData = async () => {
   };
 
   try {
-    const ordinaryFortnight = await getLastOrdinaryFortnight();
-    const currentFortnight = await getCurrentOpenFortnight();
+    const [ordinaryFortnight, currentFortnight] = await Promise.all([
+      getLastOrdinaryFortnight(),
+      getCurrentOpenFortnight(),
+    ]);
 
     return {
       ...result,

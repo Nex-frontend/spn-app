@@ -1,5 +1,5 @@
 import { HoverCard, List, Stack, Title } from '@mantine/core';
-import { AppBadge, IconSuccess, IconWrapper } from '~/features/ui';
+import { AppBadge, IconList } from '~/features/ui';
 
 interface Props {
   status: string | null;
@@ -9,7 +9,7 @@ interface Props {
 
 export const BadgeFortnightSicon = ({ status, name, fortnight }: Props) => {
   return (
-    <HoverCard width={280} shadow="md" withArrow arrowSize={10}>
+    <HoverCard width={280}>
       <HoverCard.Target>
         <AppBadge type="info" size="lg">
           {fortnight}
@@ -17,17 +17,8 @@ export const BadgeFortnightSicon = ({ status, name, fortnight }: Props) => {
       </HoverCard.Target>
       <HoverCard.Dropdown>
         <Stack align="flex-start" justify="center" gap="md">
-          <Title order={4}>Quincena en Cargar tablas de SICON</Title>
-          <List
-            spacing="xs"
-            size="sm"
-            center
-            icon={
-              <IconWrapper color="teal" size={24} radius="xl">
-                <IconSuccess size={16} />
-              </IconWrapper>
-            }
-          >
+          <Title order={4}>Quincena en Cargar tablas - SICON</Title>
+          <List spacing="xs" size="sm" center icon={<IconList type="success" />}>
             <List.Item>
               Quincena: <span className="font-bold">{fortnight}</span>
             </List.Item>

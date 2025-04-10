@@ -1,16 +1,15 @@
 import { auth } from '..';
 import { createServerFn } from '@tanstack/react-start';
 import { getWebRequest, setHeader } from '@tanstack/react-start/server';
-import { ErrorApp } from '../../errors';
 import { auth as betterAuth } from '~/lib/auth';
-import { errorMiddleware } from '~/lib/middleware/error.middleware';
+import { errorMiddleware } from '~/lib/middleware';
 import { LoginSchema } from '~/schemas';
+import { ErrorApp } from '~/server/core';
 
 export const signIn = createServerFn({ method: 'POST' })
   .middleware([errorMiddleware])
   .validator(LoginSchema)
   .handler(async ({ data }) => {
-
     const response = await auth.cases.signIn(data);
     setHeader('set-cookie', response.headers.getSetCookie());
 

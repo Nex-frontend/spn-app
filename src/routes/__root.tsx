@@ -3,7 +3,13 @@ import type { QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
-import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
+import {
+  ColorSchemeScript,
+  createTheme,
+  HoverCard,
+  mantineHtmlProps,
+  MantineProvider,
+} from '@mantine/core';
 import mantineCssUrl from '@mantine/core/styles.css?url';
 import { Notifications } from '@mantine/notifications';
 import notificationCssUrl from '@mantine/notifications/styles.css?url';
@@ -38,6 +44,7 @@ export const Route = createRootRouteWithContext<{
     ]);
 
     return { user, initialSiapsep, initialSicon };
+    // return { user };
   },
   head: () => ({
     meta: [
@@ -99,6 +106,18 @@ function RootComponent() {
   );
 }
 
+const theme = createTheme({
+  components: {
+    HoverCard: HoverCard.extend({
+      defaultProps: {
+        shadow: 'md',
+        withArrow: true,
+        arrowSize: 10,
+      },
+    }),
+  },
+});
+
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" {...mantineHtmlProps}>
@@ -107,7 +126,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <ColorSchemeScript nonce="8IBTHwOdqNKAWeKl7plt8g==" defaultColorScheme="dark" />
       </head>
       <body>
-        <MantineProvider defaultColorScheme="dark">
+        <MantineProvider defaultColorScheme="dark" theme={theme}>
           <Notifications position="top-right" limit={4} />
           {children}
         </MantineProvider>
