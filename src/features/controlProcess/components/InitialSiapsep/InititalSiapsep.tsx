@@ -1,5 +1,4 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { Group } from '@mantine/core';
 import { BadgeFortnightSiapsep } from './BadgeFortnightSiapsep';
 import { controlProcessQueryOptions } from '~/features/controlProcess';
 import { AppBadge, IconServerError } from '~/features/ui';
@@ -16,7 +15,7 @@ export const InititalSiapsep = () => {
   }
 
   return (
-    <Group>
+    <>
       <BadgeFortnightSiapsep
         {...data.ordinaryFortnight}
         consecutive={0}
@@ -26,6 +25,6 @@ export const InititalSiapsep = () => {
         {...data.currentFortnight}
         title="Nomina Actual de Control Proceso - SIAPSEP"
       />
-    </Group>
+    </>
   );
 };

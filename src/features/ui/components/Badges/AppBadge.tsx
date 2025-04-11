@@ -3,11 +3,11 @@ import { Badge, BadgeProps } from '@mantine/core';
 
 type BadgesTypes = 'warning' | 'error' | 'success' | 'info';
 
-interface Props extends BadgeProps {
+export interface AppBadgeProps extends BadgeProps {
   type?: BadgesTypes;
 }
 
-export const AppBadge = ({ type, ...restProps }: Props) => {
+export const AppBadge = ({ type, ...restProps }: AppBadgeProps) => {
   const color = useMemo(() => {
     if (!type) {
       return 'blue';

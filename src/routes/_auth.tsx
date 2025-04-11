@@ -62,8 +62,10 @@ function DashboardLayout() {
           <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" />
           {/* <MantineLogo size={30} /> */}
           {/* {initialSiapsep.online && initialSiapsep.ordinaryFortnight?.fortnight} */}
-          <InititalSiapsep />
-          <InititalSicon />
+          <Group>
+            <InititalSiapsep />
+            <InititalSicon />
+          </Group>
           <Group h="100%" gap={0} visibleFrom="sm">
             <FeaturesCard />
           </Group>

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Group, HoverCard, List, Stack, Title } from '@mantine/core';
-import { AppBadge, IconList } from '~/features/ui';
+import { IconList, ServerBadge } from '~/features/ui';
 
 interface Props {
   title: string;
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const BadgeFortnightSiapsep = ({ title, fortnight, status, consecutive, error }: Props) => {
-  const badgeType = error ? 'error' : 'info';
+  const badgeType = error ? 'error' : 'success';
   const badgeText = fortnight > 0 ? `${fortnight} - ${status}` : 'Error';
   const consecutiveText = useMemo(() => {
     if (consecutive < 0) return 'Invalido';
@@ -29,9 +29,7 @@ export const BadgeFortnightSiapsep = ({ title, fortnight, status, consecutive, e
     <Group justify="center">
       <HoverCard width={280}>
         <HoverCard.Target>
-          <AppBadge type={badgeType} size="lg">
-            {badgeText}
-          </AppBadge>
+          <ServerBadge type={badgeType}>{badgeText}</ServerBadge>
         </HoverCard.Target>
         <HoverCard.Dropdown>
           <Stack align="flex-start" justify="center" gap="md">

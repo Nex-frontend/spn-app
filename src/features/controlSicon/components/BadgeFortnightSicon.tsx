@@ -1,5 +1,5 @@
 import { HoverCard, List, Stack, Title } from '@mantine/core';
-import { AppBadge, IconList } from '~/features/ui';
+import { IconList, ServerBadge } from '~/features/ui';
 
 interface Props {
   status: string | null;
@@ -11,9 +11,7 @@ export const BadgeFortnightSicon = ({ status, name, fortnight }: Props) => {
   return (
     <HoverCard width={280}>
       <HoverCard.Target>
-        <AppBadge type="info" size="lg">
-          {fortnight}
-        </AppBadge>
+        <ServerBadge>{fortnight} - SICON</ServerBadge>
       </HoverCard.Target>
       <HoverCard.Dropdown>
         <Stack align="flex-start" justify="center" gap="md">
