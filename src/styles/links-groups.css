@@ -71,3 +71,8 @@
   width: 25px;
   height: 25px;
 }
+
+.inputColor {
+  border-color: '#424242' !important;
+  cursor: 'pointer' !important;
+}

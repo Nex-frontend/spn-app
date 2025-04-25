@@ -43,6 +43,7 @@ const BreadCrumbs = ({ crumbs }: BreadCrumbsProps) => {
             size="xs"
             radius="lg"
             leftSection={Icon ? <Icon size={14} /> : null}
+            // disabled={i === crumbs.length - 1}
           >
             {crumb}
           </AppButtonLink>
@@ -50,6 +51,7 @@ const BreadCrumbs = ({ crumbs }: BreadCrumbsProps) => {
       }),
     []
   );
+
   return <BreadcrumbsMantine>{breadcrumbs}</BreadcrumbsMantine>;
 };
 

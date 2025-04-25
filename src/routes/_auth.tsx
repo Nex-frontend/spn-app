@@ -6,7 +6,7 @@ import { nprogress } from '@mantine/nprogress';
 import { SignOut } from '~/features/auth';
 import { InititalSiapsep } from '~/features/controlProcess';
 import { InititalSicon } from '~/features/controlSicon';
-import { FeaturesCard, MainHeader, SideBarMenu } from '~/features/ui';
+import { MainHeader, Searchbar, SideBarMenu } from '~/features/ui';
 
 export const Route = createFileRoute('/_auth')({
   component: DashboardLayout,
@@ -32,17 +32,17 @@ export const Route = createFileRoute('/_auth')({
 
 function DashboardLayout() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
-  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(false);
+  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
 
   const isLoading = useRouterState({
     select: (s) => s.isLoading,
   });
 
+  console.log({ mobileOpened, desktopOpened });
+
   useEffect(() => {
     if (isLoading) {
       nprogress.start();
-    } else {
-      nprogress.complete();
     }
 
     return () => nprogress.complete();
@@ -57,6 +57,7 @@ function DashboardLayout() {
         collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
       }}
       padding="md"
+      // padding="md"
     >
       <AppShell.Header>
         <Group h="100%" px="md" justify="space-between">
@@ -67,7 +68,8 @@ function DashboardLayout() {
             <InititalSicon />
           </Group>
           <Group h="100%" gap={0} visibleFrom="sm">
-            <FeaturesCard />
+            {/* <FeaturesCard /> */}
+            <Searchbar />
           </Group>
         </Group>
       </AppShell.Header>
@@ -85,4 +87,33 @@ function DashboardLayout() {
       </AppShell.Main>
     </AppShell>
   );
+
+  // return (
+  //   <AppShell
+  //     header={{ height: 60 }}
+  //     navbar={{
+  //       width: 300,
+  //       breakpoint: 'sm',
+  //       collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
+  //     }}
+  //     padding="md"
+  //   >
+  //     <AppShell.Header>
+  //       <Group h="100%" px="md">
+  //         <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
+  //         <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" />
+  //         {/* <MantineLogo size={30} /> */}
+  //       </Group>
+  //     </AppShell.Header>
+  //     <AppShell.Navbar p="md">
+  //       Navbar
+  //       {Array(15)
+  //         .fill(0)
+  //         .map((_, index) => (
+  //           <Skeleton key={index} h={28} mt="sm" animate={false} />
+  //         ))}
+  //     </AppShell.Navbar>
+  //     <AppShell.Main>Main</AppShell.Main>
+  //   </AppShell>
+  // );
 }

@@ -6,3 +6,4 @@ export * from './IconList/IconList';
 export * from './Icons';
 export * from './SideBarMenu/SideBarMenu';
 export * from './MainHeader';
+export * from './Searchbar';

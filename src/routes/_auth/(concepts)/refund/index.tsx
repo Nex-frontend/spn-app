@@ -13,5 +13,5 @@ export const Route = createFileRoute('/_auth/(concepts)/refund/')({
 });
 
 function RouteComponent() {
-  return <div>Hello "/_auth/refund/"!</div>;
+  return <div>Estas en Reintegros bitches</div>;
 }

@@ -15,6 +15,7 @@ import { Notifications } from '@mantine/notifications';
 import notificationCssUrl from '@mantine/notifications/styles.css?url';
 import { NavigationProgress } from '@mantine/nprogress';
 import nprogressCssUrl from '@mantine/nprogress/styles.css?url';
+import spotlightCssUrl from '@mantine/spotlight/styles.css?url';
 import { authQueryOptions } from '~/features/auth';
 import { controlProcessQueryOptions } from '~/features/controlProcess';
 import { DefaultCatchBoundary, NotFound } from '~/features/core';
@@ -69,6 +70,7 @@ export const Route = createRootRouteWithContext<{
       { rel: 'stylesheet', href: nprogressCssUrl },
       { rel: 'stylesheet', href: sidebarCssUrl },
       { rel: 'stylesheet', href: linksCssUrl },
+      { rel: 'stylesheet', href: spotlightCssUrl },
       // { rel: 'stylesheet', href: appCssUrl },
       {
         rel: 'apple-touch-icon',

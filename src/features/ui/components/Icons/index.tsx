@@ -7,3 +7,4 @@ export * from './IconWrapper';
 export * from './IconServer';
 export * from './IconHome';
 export * from './IconConcept';
+export * from './IconSearch';
