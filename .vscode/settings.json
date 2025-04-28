@@ -8,4 +8,15 @@
   "files.readonlyInclude": {
     "**/routeTree.gen.ts": true
   },
+  "eslint.format.enable": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.formatOnSave": true, // Opcional: activa el formato al guardar
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "typescriptreact"
+  ],
+  "editor.codeActions.triggerOnFocusChange": true,
 }

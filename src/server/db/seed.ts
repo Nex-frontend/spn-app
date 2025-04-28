@@ -22,6 +22,9 @@ const main = async () => {
         }
         //you can also show the original error message
       },
+      onSuccess: () => {
+        console.log('successed');
+      }
     }
   );
 };

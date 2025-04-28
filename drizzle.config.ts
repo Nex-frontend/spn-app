@@ -1,7 +1,8 @@
-import * as dotenv from 'dotenv';
 import type { Config } from 'drizzle-kit';
 
-dotenv.config();
+// dotenv.config();
+
+import 'dotenv/config';
 
 export default {
   schema: './src/server/db/spn/schema.ts',
@@ -11,6 +12,7 @@ export default {
   verbose: true,
   strict: true,
   dbCredentials: {
-    url: process.env.DATABASE_URL!,
+    url: process.env.SPN_BD_URL!,
+    // url: "postgresql://postgres:postgres@localhost:5432/test_db"
   },
 } as Config;

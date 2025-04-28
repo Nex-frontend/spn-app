@@ -8,4 +8,5 @@ const pool = mysql.createPool(process.env.SICON_BD_URL!);
 
 const db_sicon = drizzle(pool, { schema, mode: 'default' });
 
+
 export { db_sicon };

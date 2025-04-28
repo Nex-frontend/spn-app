@@ -38,8 +38,6 @@ function DashboardLayout() {
     select: (s) => s.isLoading,
   });
 
-  console.log({ mobileOpened, desktopOpened });
-
   useEffect(() => {
     if (isLoading) {
       nprogress.start();
@@ -63,17 +61,18 @@ function DashboardLayout() {
         <Group h="100%" px="md" justify="space-between">
           <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
           <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" />
-          <Group>
+          <Group visibleFrom='sm'>
             <InititalSiapsep />
             <InititalSicon />
           </Group>
-          <Group h="100%" gap={0} visibleFrom="sm">
-            {/* <FeaturesCard /> */}
-            <Searchbar />
-          </Group>
+          <Searchbar />
         </Group>
       </AppShell.Header>
       <AppShell.Navbar p="md">
+        <AppShell.Section hiddenFrom='sm' className='flex flex-row flex-wrap gap-2 justify-start items-center'>
+            <InititalSiapsep />
+            <InititalSicon />
+        </AppShell.Section>
         <AppShell.Section grow my="md" component={ScrollArea}>
           <SideBarMenu />
         </AppShell.Section>
@@ -87,33 +86,4 @@ function DashboardLayout() {
       </AppShell.Main>
     </AppShell>
   );
-
-  // return (
-  //   <AppShell
-  //     header={{ height: 60 }}
-  //     navbar={{
-  //       width: 300,
-  //       breakpoint: 'sm',
-  //       collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
-  //     }}
-  //     padding="md"
-  //   >
-  //     <AppShell.Header>
-  //       <Group h="100%" px="md">
-  //         <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
-  //         <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" />
-  //         {/* <MantineLogo size={30} /> */}
-  //       </Group>
-  //     </AppShell.Header>
-  //     <AppShell.Navbar p="md">
-  //       Navbar
-  //       {Array(15)
-  //         .fill(0)
-  //         .map((_, index) => (
-  //           <Skeleton key={index} h={28} mt="sm" animate={false} />
-  //         ))}
-  //     </AppShell.Navbar>
-  //     <AppShell.Main>Main</AppShell.Main>
-  //   </AppShell>
-  // );
 }

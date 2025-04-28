@@ -8,3 +8,4 @@ export * from './IconServer';
 export * from './IconHome';
 export * from './IconConcept';
 export * from './IconSearch';
+export * from './IconEmptySearch';

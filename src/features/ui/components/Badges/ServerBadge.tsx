@@ -8,7 +8,6 @@ export const ServerBadge = (props: Props) => {
     <AppBadge
       type="success"
       size="lg"
-      visibleFrom="xs"
       leftSection={<IconServer size={19} />}
       {...props}
     />

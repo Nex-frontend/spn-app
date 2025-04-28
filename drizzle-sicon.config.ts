@@ -1,7 +1,6 @@
-import * as dotenv from 'dotenv';
 import type { Config } from 'drizzle-kit';
 
-dotenv.config();
+import 'dotenv/config';
 
 export default {
   out: './.drizzle-sicon',
@@ -10,6 +9,6 @@ export default {
   verbose: true,
   strict: true,
   dbCredentials: {
-    url: 'mysql://admin:T2Zasb8TUW@seduc-rds-mysql.cdy3wulktq0e.us-east-1.rds.amazonaws.com:3306/sicon',
+    url: process.env.SICON_BD_URL!,
   },
 } as Config;
