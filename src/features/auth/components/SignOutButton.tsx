@@ -4,7 +4,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { nprogress } from '@mantine/nprogress';
 import { useSignOut } from '../hooks';
 
-export const SignOut = () => {
+export const SignOutButton = () => {
   const signOutMutation = useSignOut();
   const navigate = useNavigate();
 

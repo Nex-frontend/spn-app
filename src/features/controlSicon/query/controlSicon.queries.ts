@@ -9,6 +9,6 @@ export const controlSiconQueries = {
   fortnight: () =>
     queryOptions({
       queryKey: controlSiconKeys.all,
-      queryFn: ({ signal }) => serverFn.controlSicon.getFortnight({ signal }),
+      queryFn: serverFn.controlSicon.getFortnight,
     }),
 };

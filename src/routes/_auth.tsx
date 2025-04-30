@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { createFileRoute, Outlet, redirect, useRouterState } from '@tanstack/react-router';
 import { AppShell, Burger, Group, ScrollArea } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { nprogress } from '@mantine/nprogress';
-import { SignOut } from '~/features/auth';
-import { InititalSiapsep } from '~/features/controlProcess';
-import { InititalSicon } from '~/features/controlSicon';
-import { MainHeader, Searchbar, SideBarMenu } from '~/features/ui';
+import { SignOutButton } from '~/features/auth';
+import { controlProcessQueries, InititalSiapsep } from '~/features/controlProcess';
+import { controlSiconQueries, InititalSicon } from '~/features/controlSicon';
+import { MainHeader, Searchbar, SideBarMenu, SkeletonBadge } from '~/features/ui';
 
 export const Route = createFileRoute('/_auth')({
   component: DashboardLayout,
@@ -19,6 +19,10 @@ export const Route = createFileRoute('/_auth')({
         },
       });
     }
+
+    context.queryClient.prefetchQuery(controlProcessQueries.fortnight());
+    context.queryClient.prefetchQuery(controlSiconQueries.fortnight());
+
     return { crumb: 'Dashboard', iconName: 'home' };
   },
   head: () => ({
@@ -55,15 +59,16 @@ function DashboardLayout() {
         collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
       }}
       padding="md"
-      // padding="md"
     >
       <AppShell.Header>
         <Group h="100%" px="md" justify="space-between">
           <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
           <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" />
           <Group visibleFrom="sm">
-            <InititalSicon />
-            <InititalSiapsep />
+            <Suspense fallback={<SkeletonBadge quantity={2} />}>
+              <InititalSicon />
+              <InititalSiapsep />
+            </Suspense>
           </Group>
           <Searchbar />
         </Group>
@@ -73,14 +78,16 @@ function DashboardLayout() {
           hiddenFrom="sm"
           className="flex flex-row flex-wrap gap-2 justify-start items-center"
         >
-          <InititalSiapsep />
-          <InititalSicon />
+          <Suspense fallback={<SkeletonBadge quantity={2} />}>
+            <InititalSiapsep />
+            <InititalSicon />
+          </Suspense>
         </AppShell.Section>
         <AppShell.Section grow my="md" component={ScrollArea}>
           <SideBarMenu />
         </AppShell.Section>
         <AppShell.Section>
-          <SignOut />
+          <SignOutButton />
         </AppShell.Section>
       </AppShell.Navbar>
       <AppShell.Main>

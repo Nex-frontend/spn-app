@@ -9,6 +9,6 @@ export const controlProcessQueries = {
   fortnight: () =>
     queryOptions({
       queryKey: controlProcessKeys.all,
-      queryFn: ({ signal }) => serverFn.controlProcess.getFortnight({ signal }),
+      queryFn: serverFn.controlProcess.getFortnight,
     }),
 };

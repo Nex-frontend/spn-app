@@ -3,8 +3,9 @@ import { signInFormOptions } from '../form';
 import { useAuth } from '../hooks';
 import { useAppForm } from '~/features/form';
 
-export const SigninForm = () => {
+export const SignInForm = () => {
   const navigate = useNavigate();
+  const signInMutation = useAuth();
 
   const form = useAppForm({
     ...signInFormOptions,
@@ -12,13 +13,13 @@ export const SigninForm = () => {
       signInMutation.mutate(
         { data: value },
         {
-          onSuccess: () => navigate({ to: '/' }),
+          onSuccess: () => {
+            navigate({ to: '/' });
+          },
         }
       );
     },
   });
-
-  const signInMutation = useAuth();
 
   return (
     <form

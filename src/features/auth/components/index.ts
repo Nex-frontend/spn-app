@@ -1,2 +1,2 @@
-export * from './SignOut';
-export * from './SigninForm';
+export * from './SignOutButton';
+export * from './SignInForm';

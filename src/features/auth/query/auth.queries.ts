@@ -9,6 +9,6 @@ export const authQueries = {
   user: () =>
     queryOptions({
       queryKey: authKeys.all,
-      queryFn: ({ signal }) => serverFn.auth.getUser({ signal }),
+      queryFn: serverFn.auth.getUser,
     }),
 };

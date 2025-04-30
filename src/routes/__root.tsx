@@ -17,38 +17,22 @@ import { NavigationProgress } from '@mantine/nprogress';
 import nprogressCssUrl from '@mantine/nprogress/styles.css?url';
 import spotlightCssUrl from '@mantine/spotlight/styles.css?url';
 import { authQueries } from '~/features/auth';
-import { controlProcessQueries } from '~/features/controlProcess';
 import { DefaultCatchBoundary, NotFound } from '~/features/core';
-import { serverFn } from '~/server/functions';
 // import appCssUrl from '~/styles/app.css?url';
 import '~/styles/app.css';
 
-import { controlSiconQueries } from '~/features/controlSicon';
 import linksCssUrl from '~/styles/links-groups.css?url';
 import sidebarCssUrl from '~/styles/sidebar.css?url';
 import { Nulleable, seo } from '~/utils';
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
-  user: Awaited<ReturnType<typeof serverFn.auth.getUser>>;
-  initialSiapsep: Awaited<ReturnType<typeof serverFn.controlProcess.getFortnight>>;
-  initialSicon: Awaited<ReturnType<typeof serverFn.controlSicon.getFortnight>>;
   crumb: Nulleable<string>;
   iconName: Nulleable<string>;
 }>()({
   beforeLoad: async ({ context }) => {
-    const user = await context.queryClient.fetchQuery(authQueries.user());
-
-    if (!user) {
-      return { user };
-    }
-
-    const [initialSiapsep, initialSicon] = await Promise.all([
-      context.queryClient.fetchQuery(controlProcessQueries.fortnight()),
-      context.queryClient.fetchQuery(controlSiconQueries.fortnight()),
-    ]);
-
-    return { user, initialSiapsep, initialSicon, crumb: null, iconName: null };
+    const user = await context.queryClient.ensureQueryData(authQueries.user());
+    return { user };
   },
   head: () => ({
     meta: [

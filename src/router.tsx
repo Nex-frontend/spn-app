@@ -18,31 +18,6 @@ const handleErrorMessage = (errorMessage?: string) => {
   return errorMessage;
 };
 
-const initialSiapsep = {
-  online: false,
-  error: 'No ha inicializado',
-  ordinaryFortnight: {
-    fortnight: 0,
-    status: '',
-  },
-  currentFortnight: {
-    fortnight: 0,
-    consecutive: 0,
-    status: '',
-  },
-};
-
-const initialSicon = {
-  online: false,
-  error: 'No ha inicitalizado',
-  module: {
-    id: 0,
-    status: '',
-    fortnight: '',
-    name: '',
-  },
-};
-
 export function createRouter() {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -76,15 +51,10 @@ export function createRouter() {
       routeTree,
       context: {
         queryClient,
-        user: null,
-        initialSiapsep,
-        initialSicon,
         crumb: null,
         iconName: null,
       },
       defaultPreload: 'intent',
-      // react-query will handle data fetching & caching
-      // https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#passing-all-loader-events-to-an-external-cache
       defaultPreloadStaleTime: 0,
       defaultErrorComponent: DefaultCatchBoundary,
       defaultNotFoundComponent: () => <NotFound />,
