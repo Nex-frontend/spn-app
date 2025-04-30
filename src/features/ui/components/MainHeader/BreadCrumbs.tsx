@@ -33,17 +33,16 @@ const getIcon = (iconName: Nulleable<string>) => {
 const BreadCrumbs = ({ crumbs }: BreadCrumbsProps) => {
   const breadcrumbs = useMemo(
     () =>
-      crumbs.map(({ context: { crumb, iconName }, pathname }) => {
+      crumbs.map(({ context: { crumb, iconName }, pathname }, i) => {
         const Icon = getIcon(iconName);
         return (
           <AppButtonLink
             to={pathname}
             key={crumb}
-            variant="subtle"
+            variant={i === crumbs.length - 1 ? 'light' : 'subtle'}
             size="xs"
             radius="lg"
             leftSection={Icon ? <Icon size={14} /> : null}
-            // disabled={i === crumbs.length - 1}
           >
             {crumb}
           </AppButtonLink>

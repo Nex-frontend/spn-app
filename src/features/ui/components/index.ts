@@ -8,3 +8,4 @@ export * from './SideBarMenu/SideBarMenu';
 export * from './MainHeader';
 export * from './Searchbar';
 export * from './Skeleton';
+export * from './Alert';

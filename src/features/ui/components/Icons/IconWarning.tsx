@@ -1,6 +1,6 @@
-import { IconAlertCircle } from '@tabler/icons-react';
+import { IconInfoTriangle } from '@tabler/icons-react';
 import { IconAppProps } from './icon.types';
 
 export const IconWarning = (props: IconAppProps) => {
-  return <IconAlertCircle {...props} />;
+  return <IconInfoTriangle {...props} />;
 };

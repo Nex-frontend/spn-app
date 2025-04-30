@@ -1,4 +1,4 @@
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import { signInFormOptions } from '../form';
 import { useAuth } from '../hooks';
 import { useAppForm } from '~/features/form';
@@ -6,6 +6,9 @@ import { useAppForm } from '~/features/form';
 export const SignInForm = () => {
   const navigate = useNavigate();
   const signInMutation = useAuth();
+  const params = useSearch({ strict: true });
+
+  console.log('params', params);
 
   const form = useAppForm({
     ...signInFormOptions,
@@ -14,7 +17,7 @@ export const SignInForm = () => {
         { data: value },
         {
           onSuccess: () => {
-            navigate({ to: '/' });
+            navigate({ to: params.redirect || '/' });
           },
         }
       );

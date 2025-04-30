@@ -4,6 +4,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import {
+  Button,
   ColorSchemeScript,
   createTheme,
   HoverCard,
@@ -21,6 +22,7 @@ import { DefaultCatchBoundary, NotFound } from '~/features/core';
 // import appCssUrl from '~/styles/app.css?url';
 import '~/styles/app.css';
 
+import { variant } from 'valibot';
 import linksCssUrl from '~/styles/links-groups.css?url';
 import sidebarCssUrl from '~/styles/sidebar.css?url';
 import { Nulleable, seo } from '~/utils';
@@ -97,12 +99,21 @@ function RootComponent() {
 }
 
 const theme = createTheme({
+  defaultRadius: 'md',
   components: {
     HoverCard: HoverCard.extend({
       defaultProps: {
         shadow: 'md',
         withArrow: true,
         arrowSize: 10,
+      },
+    }),
+    Button: Button.extend({
+      defaultProps: {
+        variant: 'light',
+        loaderProps: {
+          type: 'dots',
+        },
       },
     }),
   },
