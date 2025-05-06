@@ -3,6 +3,7 @@ import type { QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import mantineTablesCssUrl from 'mantine-react-table/styles.css?url';
 import {
   Button,
   ColorSchemeScript,
@@ -22,10 +23,10 @@ import { DefaultCatchBoundary, NotFound } from '~/features/core';
 // import appCssUrl from '~/styles/app.css?url';
 import '~/styles/app.css';
 
-import { variant } from 'valibot';
+import { Nulleable } from '~/shared';
 import linksCssUrl from '~/styles/links-groups.css?url';
 import sidebarCssUrl from '~/styles/sidebar.css?url';
-import { Nulleable, seo } from '~/utils';
+import { seo } from '~/utils';
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -57,6 +58,7 @@ export const Route = createRootRouteWithContext<{
       { rel: 'stylesheet', href: sidebarCssUrl },
       { rel: 'stylesheet', href: linksCssUrl },
       { rel: 'stylesheet', href: spotlightCssUrl },
+      { rel: 'stylesheet', href: mantineTablesCssUrl },
       // { rel: 'stylesheet', href: appCssUrl },
       {
         rel: 'apple-touch-icon',

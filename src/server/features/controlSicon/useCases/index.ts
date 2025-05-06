@@ -1,1 +1,1 @@
-export * from './getLoadTablesFortnight';
+export * from './getLoadTablesFortnight.case';

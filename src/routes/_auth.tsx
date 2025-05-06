@@ -54,7 +54,7 @@ function DashboardLayout() {
     <AppShell
       header={{ height: { base: 60, md: 70, lg: 80 } }}
       navbar={{
-        width: { base: 250, md: 300, lg: 400 },
+        width: { base: 250 },
         breakpoint: 'sm',
         collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
       }}

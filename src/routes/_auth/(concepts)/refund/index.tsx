@@ -1,11 +1,16 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { Button, Group, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { refundQueries } from '~/features/refund';
 import { Alert } from '~/features/ui';
 
 export const Route = createFileRoute('/_auth/(concepts)/refund/')({
   component: RouteComponent,
-  beforeLoad: () => ({ crumb: 'Reintegros', iconName: 'concept' }),
+  beforeLoad: async ({ context }) => {
+    context.queryClient.prefetchQuery(refundQueries.logs());
+    return { crumb: 'Reintegros', iconName: 'concept' };
+  },
   head: () => ({
     meta: [{ title: 'Reintegros | SPN' }],
   }),
@@ -13,6 +18,8 @@ export const Route = createFileRoute('/_auth/(concepts)/refund/')({
 
 function RouteComponent() {
   const [loading, { toggle }] = useDisclosure();
+
+  const { data: refundLogs } = useSuspenseQuery(refundQueries.logs());
 
   return (
     <>
@@ -27,6 +34,7 @@ function RouteComponent() {
           Verificar consecutivo
         </Button>
       </Group>
+      {/* <RefundLogHistory /> */}
     </>
   );
 }
