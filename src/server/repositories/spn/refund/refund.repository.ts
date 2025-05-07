@@ -1,12 +1,17 @@
+import { eq } from 'drizzle-orm';
 import { db } from '~/server/db';
-import { refundLogs } from '~/server/db/spn/schema';
+import { refundLogs, user } from '~/server/db/spn/schema';
 
-export const getRefundLogs = async () => {
+interface PaginateProps {
+  total: number;
+}
+
+export const getRefundLogs = async ({ total }: PaginateProps) => {
   return await db.spn
     .select({
       id: refundLogs.id,
       processFortnight: refundLogs.processFortnight,
-      userId: refundLogs.userId,
+      user: user.name,
       createdAt: refundLogs.createdAt,
       rfcCreated: refundLogs.rfcCreated,
       rfcDeletedResponsabilities: refundLogs.rfcDeletedResponsabilities,
@@ -18,5 +23,7 @@ export const getRefundLogs = async () => {
       activeBefore: refundLogs.activeBefore,
       activeAfter: refundLogs.activeAfter,
     })
-    .from(refundLogs);
+    .from(refundLogs)
+    .leftJoin(user, eq(refundLogs.userId, user.id))
+    .limit(total);
 };
