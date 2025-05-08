@@ -2,7 +2,7 @@ import { createServerFn } from '@tanstack/react-start';
 import { refund } from '../index';
 
 export const getRefundLogs = createServerFn()
-  .validator((data: { total: number }) => data)
+  .validator((data: { limit: number; page: number }) => data)
   .handler(async (ctx) => {
-    return await refund.cases.getLogs(ctx.data.total);
+    return await refund.cases.getLogs(ctx.data.limit, ctx.data.page);
   });

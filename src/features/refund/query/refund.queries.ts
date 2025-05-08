@@ -6,14 +6,15 @@ export const refundKeys = {
 };
 
 interface Props {
-  total: number;
+  limit: number;
+  page: number;
 }
 
 export const refundQueries = {
-  logs: ({ total }: Props) =>
+  logs: ({ limit, page }: Props) =>
     queryOptions({
-      queryKey: [...refundKeys.all, total],
-      queryFn: ({ signal }) => serverFn.refund.getRefundLogs({ data: { total }, signal }),
+      queryKey: [...refundKeys.all, limit, page],
+      queryFn: ({ signal }) => serverFn.refund.getRefundLogs({ data: { limit, page }, signal }),
       placeholderData: keepPreviousData,
     }),
 };

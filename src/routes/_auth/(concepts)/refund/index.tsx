@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, stripSearchParams } from '@tanstack/react-router';
 import * as v from 'valibot';
 import { Button, Group, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
@@ -7,16 +7,26 @@ import { RefundLogHistory, refundQueries } from '~/features/refund';
 import { Alert } from '~/features/ui';
 
 export const refundSearchSchema = v.object({
-  total: v.optional(v.fallback(v.number(), 10), 10),
+  limit: v.optional(v.fallback(v.number(), 10), 10),
+  page: v.optional(v.fallback(v.number(), 0), 0),
 });
+
+const defaultValues = {
+  limit: 10,
+  page: 0,
+};
 
 export const Route = createFileRoute('/_auth/(concepts)/refund/')({
   component: RouteComponent,
   validateSearch: refundSearchSchema,
   beforeLoad: ({ context, search }) => {
-    const { total } = search;
-    context.queryClient.prefetchQuery(refundQueries.logs({ total }));
+    const { limit, page } = search;
+    console.log({ limit, page });
+    context.queryClient.prefetchQuery(refundQueries.logs({ limit, page }));
     return { crumb: 'Reintegros', iconName: 'concept' };
+  },
+  search: {
+    middlewares: [stripSearchParams(defaultValues)],
   },
   head: () => ({
     meta: [{ title: 'Reintegros | SPN' }],

@@ -3,8 +3,13 @@ import { IconRefresh } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { PaginationState, Updater } from '@tanstack/table-core';
-import { MantineReactTable, MRT_ColumnDef, useMantineReactTable } from 'mantine-react-table';
-import { ActionIcon, Button, Tooltip } from '@mantine/core';
+import {
+  MantineReactTable,
+  MRT_ColumnDef,
+  MRT_SortingState,
+  useMantineReactTable,
+} from 'mantine-react-table';
+import { ActionIcon, Tooltip } from '@mantine/core';
 import { refundQueries } from '../query';
 import { Route as RefundRoute } from '~/routes/_auth/(concepts)/refund';
 import { getRefundLogs } from '~/server/repositories/spn/refund';
@@ -14,24 +19,29 @@ type Refunds = Awaited<ReturnType<typeof getRefundLogs>>[number];
 export const RefundLogHistory = () => {
   const search = RefundRoute.useSearch();
   const navigate = useNavigate({ from: RefundRoute.fullPath });
+  const [sorting, setSorting] = useState<MRT_SortingState>([]);
   const { data, isLoading, isFetching, isError, refetch } = useQuery(
-    refundQueries.logs({ total: search.total })
+    refundQueries.logs({ limit: search.limit, page: search.page })
   );
+
+  console.log({ sorting });
 
   const handlePaginationChange = (pagination: Updater<PaginationState>) => {
     const newPagination =
       typeof pagination === 'function'
         ? pagination({
-            pageIndex: search.pageIndex,
-            pageSize: search.total,
+            pageIndex: search.page,
+            pageSize: search.limit,
           })
         : pagination;
+
+    // if (search.page === newPagination.pageIndex + 1) return;
 
     navigate({
       search: (prev) => ({
         ...prev,
-        pageIndex: newPagination.pageIndex,
-        total: newPagination.pageSize,
+        page: newPagination.pageIndex,
+        limit: newPagination.pageSize,
       }),
       replace: true,
       resetScroll: false,
@@ -105,12 +115,14 @@ export const RefundLogHistory = () => {
       </Tooltip>
     ),
     manualPagination: true,
+    manualSorting: true,
+    onSortingChange: setSorting,
     onPaginationChange: handlePaginationChange,
     state: {
       isLoading,
       pagination: {
-        pageIndex: search.pageIndex,
-        pageSize: search.total,
+        pageIndex: search.page,
+        pageSize: search.limit,
       },
       showAlertBanner: isError,
       showProgressBars: isFetching,
