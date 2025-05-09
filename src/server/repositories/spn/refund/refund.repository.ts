@@ -1,12 +1,7 @@
 import { and, asc, count, desc, eq, SQL } from 'drizzle-orm';
-import { AnyPgColumn, AnyPgTable, PgColumn, PgSelect, PgTable } from 'drizzle-orm/pg-core';
+import { PgColumn, PgSelect, PgTable } from 'drizzle-orm/pg-core';
 import { db } from '~/server/db';
 import { refundLogs, user } from '~/server/db/spn/schema';
-
-interface PaginateProps {
-  limit: number;
-  page: number;
-}
 
 interface WithPaginationProps<T extends PgSelect> {
   qb: T;
@@ -25,49 +20,54 @@ const withPagination = ({
   return qb.orderBy(orderByColumn).limit(limit).offset(offset);
 };
 
-const test = (order: string = 'asc') => {
+interface OrderByProps {
+  schema: PgTable & { id: PgColumn };
+  order: 'asc' | 'desc';
+  column?: PgColumn | SQL | SQL.Aliased | string;
+}
+
+const getOrderBy = ({ schema, order, column }: OrderByProps) => {
   const fn = order === 'asc' ? asc : desc;
 
-  return function (newFn: (...args) => PgColumn | SQL | SQL.Aliased) {
-    const result = newFn.bind(null, ...args);
-  };
-};
-
-const getOrderBy = (
-  schema: PgTable & { id: PgColumn },
-  order: string = 'asc',
-  orderByColumn?: PgColumn | SQL | SQL.Aliased | string
-) => {
-  const fn = order === 'asc' ? asc : desc;
-
-  if (!orderByColumn) {
+  if (!column) {
     return fn(schema.id);
   }
 
-  if (typeof orderByColumn !== 'string') {
-    return orderByColumn;
+  if (typeof column !== 'string') {
+    return column;
   }
 
-  if (schema.hasOwnProperty(orderByColumn)) {
-    return fn(schema[orderByColumn as keyof typeof schema]! as PgColumn);
+  if (schema.hasOwnProperty(column)) {
+    return fn(schema[column as keyof typeof schema]! as PgColumn);
   }
 
   return fn(schema.id);
 };
 
-const getPagination = (
-  schema: PgTable & { id: PgColumn },
-  limit: number,
-  page: number,
-  filters: SQL[] = [],
-  orderByColumn?: PgColumn | SQL | SQL.Aliased | string
-) => {
-  const offset = page <= 0 || limit <= 0 ? 0 : page * limit;
-  const orderBy = getOrderBy(schema, 'asc', orderByColumn);
+interface PaginateProps {
+  limit: number;
+  page: number;
+}
 
-  // if (!orderBy) {
-  //   throw new Error('Invalid orderBy column');
-  // }
+interface WithPaginateProps {
+  schema: PgTable & { id: PgColumn };
+  limit: number;
+  page: number;
+  filters: SQL[];
+  orderByColumn?: PgColumn | SQL | SQL.Aliased | string;
+  order: 'asc' | 'desc';
+}
+
+const getPagination = ({
+  schema,
+  limit,
+  page,
+  filters = [],
+  orderByColumn,
+  order = 'asc',
+}: WithPaginateProps) => {
+  const offset = page <= 0 || limit <= 0 ? 0 : page * limit;
+  const orderBy = getOrderBy({ schema, order, column: orderByColumn });
 
   return db.spn
     .select({ id: schema.id })
@@ -87,7 +87,7 @@ const getCount = async (schema: PgTable & { id: PgColumn }, filters: SQL[] = [])
 };
 
 export const getRefundLogs = async ({ limit, page }: PaginateProps) => {
-  const data = getPagination(refundLogs, limit, page, [], 'createdAt');
+  const data = getPagination({});
 
   const query = db.spn
     .select({
