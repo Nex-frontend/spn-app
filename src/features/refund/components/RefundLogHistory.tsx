@@ -72,21 +72,15 @@ export const RefundLogHistory = () => {
   );
 
 
+  const columnsFilter =  Object.fromEntries(
+        columns.map(({ accessorKey }) => [accessorKey, 'contains']),
+      )
   const search = RefundRoute.useSearch();
   const navigate = useNavigate({ from: RefundRoute.fullPath });
   const { data, isLoading, isFetching, isError, refetch } = useQuery(
     refundQueries.logs({ ...search })
   );
 
-  const [columnFilterFns, setColumnFilterFns] = //filter modes
-    useState<MRT_ColumnFilterFnsState>(
-      Object.fromEntries(
-        columns.map(({ accessorKey }) => [accessorKey, 'contains']),
-      ),
-    ); 
-
-    console.log({ columnFilterFns
-    });
 
   const handlePaginationChange = (pagination: Updater<PaginationState>) => {
     const newPagination =
@@ -125,6 +119,25 @@ export const RefundLogHistory = () => {
     })
   }
 
+  const handlerFilterFnChange = (filterFns: MRT_ColumnFilterFnsState) => {
+
+  const newFilterFns = 
+      typeof filterFns === 'function'
+         ? filterFns(search.filtersFn ? search.filtersFn : columnsFilter)
+         : filterFns;
+
+      // ({ [id]: newFilterFns[id] || 'contains' }))
+    
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        // filtersFn: [...filteredFns]
+        filtersFn: newFilterFns
+      }),
+      replace: true,
+      resetScroll: false,
+    })
+  }
 
   const handleSortChange = (sort: MRT_SortingState) => {
       const newSort =
@@ -164,12 +177,13 @@ export const RefundLogHistory = () => {
     manualFiltering: true,
     onPaginationChange: handlePaginationChange,
     onSortingChange: handleSortChange,
-    onColumnFilterFnsChange: setColumnFilterFns,
+    onColumnFilterFnsChange: handlerFilterFnChange,
+    // onColumnFilterFnsChange: setColumnFilterFns,
     onColumnFiltersChange: handleFilterChange,
     rowCount: totalRowCount,
     enableColumnFilterModes: true,
     state: {
-      columnFilterFns,
+      columnFilterFns: search.filtersFn ?? columnsFilter,
       columnFilters: search.filters ?? [],
       isLoading,
       pagination: {
