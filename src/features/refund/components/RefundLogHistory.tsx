@@ -2,11 +2,11 @@ import { useMemo, useState } from 'react';
 import { IconRefresh } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { PaginationState, Updater } from '@tanstack/table-core';
+import { ColumnFiltersState, PaginationState, SortingState, Updater } from '@tanstack/table-core';
 import {
   MantineReactTable,
   MRT_ColumnDef,
-  MRT_SortingState,
+  MRT_FilterOption,
   useMantineReactTable,
 } from 'mantine-react-table';
 import { ActionIcon, Tooltip } from '@mantine/core';
@@ -14,14 +14,21 @@ import { refundQueries } from '../query';
 import { Route as RefundRoute } from '~/routes/_auth/(concepts)/refund';
 import { getRefundLogs } from '~/server/repositories/spn/refund';
 
-type Refunds = Awaited<ReturnType<typeof getRefundLogs>>[number];
+type ArrayElement<T> = T extends (infer U)[] ? U : never;
+
+type Refunds = ArrayElement<Awaited<ReturnType<typeof getRefundLogs>>['data']>;
+
+// equals, not equals, between, between inclusive,
+// greater than, greater than or equal to, less than, less than or equal to,
+// empy, not empy, contains
 
 export const RefundLogHistory = () => {
-   const columns = useMemo<MRT_ColumnDef<Refunds>[]>(
+  const columns = useMemo<MRT_ColumnDef<Refunds>[]>(
     () => [
       {
         accessorKey: 'processFortnight',
         header: 'Quincena Proceso',
+        columnFilterModeOptions: ['contains', 'greaterThan', 'between'],
       },
       {
         accessorKey: 'user',
@@ -71,16 +78,14 @@ export const RefundLogHistory = () => {
     []
   );
 
-
-  const columnsFilter =  Object.fromEntries(
-        columns.map(({ accessorKey }) => [accessorKey, 'contains']),
-      )
+  const columnsFilter = Object.fromEntries(
+    columns.map(({ accessorKey }) => [accessorKey, 'contains'])
+  );
   const search = RefundRoute.useSearch();
   const navigate = useNavigate({ from: RefundRoute.fullPath });
   const { data, isLoading, isFetching, isError, refetch } = useQuery(
     refundQueries.logs({ ...search })
   );
-
 
   const handlePaginationChange = (pagination: Updater<PaginationState>) => {
     const newPagination =
@@ -102,69 +107,69 @@ export const RefundLogHistory = () => {
     });
   };
 
+  console.log({ search });
 
-  const handleFilterChange = (filters: MRT_ColumnFiltersState) => {
-    const newFilters = 
-      typeof filters === 'function'
-         ? filters(search.filters ? [...search.filters] : [])
-         : filters;
+  const handleFilterChange = (filters: Updater<ColumnFiltersState>) => {
+    const newFilters =
+      typeof filters === 'function' ? filters(search.filters ? [...search.filters] : []) : filters;
 
     navigate({
       search: (prev) => ({
         ...prev,
-        filters: [...newFilters]
+        filters: [...newFilters],
       }),
       replace: true,
       resetScroll: false,
-    })
-  }
+    });
+  };
 
-  const handlerFilterFnChange = (filterFns: MRT_ColumnFilterFnsState) => {
-
-  const newFilterFns = 
+  const handlerFilterFnChange = (filterFns: Updater<{ [key: string]: MRT_FilterOption }>) => {
+    const newFilterFns =
       typeof filterFns === 'function'
-         ? filterFns(search.filtersFn ? search.filtersFn : columnsFilter)
-         : filterFns;
+        ? filterFns(search.filtersFn ? search.filtersFn : columnsFilter)
+        : filterFns;
 
-      // ({ [id]: newFilterFns[id] || 'contains' }))
-    
+    // ({ [id]: newFilterFns[id] || 'contains' }))
+
     navigate({
       search: (prev) => ({
         ...prev,
         // filtersFn: [...filteredFns]
-        filtersFn: newFilterFns
+        filtersFn: newFilterFns,
       }),
       replace: true,
       resetScroll: false,
-    })
-  }
+    });
+  };
 
-  const handleSortChange = (sort: MRT_SortingState) => {
-      const newSort =
-        typeof sort === 'function'
-          ? sort([{
+  const handleSortChange = (sort: Updater<SortingState>) => {
+    const newSort =
+      typeof sort === 'function'
+        ? sort([
+            {
               id: 'id',
               desc: true,
-            }])
-          : sort;
-        
+            },
+          ])
+        : sort;
+
     navigate({
       search: (prev) => ({
         ...prev,
         orderBy: newSort[0].id,
-        order: newSort[0].desc ? 'desc': 'asc'
+        order: newSort[0].desc ? 'desc' : 'asc',
       }),
-        replace: true,
-        resetScroll: false,
-      });
-  } 
+      replace: true,
+      resetScroll: false,
+    });
+  };
 
   const fetchedRefunds = data?.data ?? [];
-  const totalRowCount =  data?.meta.totalRowCount ?? 0;
+  const totalRowCount = data?.meta.totalRowCount ?? 0;
 
   const table = useMantineReactTable({
     columns,
-    data: fetchedRefunds, 
+    data: fetchedRefunds,
     renderTopToolbarCustomActions: () => (
       <Tooltip label="Refresh Data">
         <ActionIcon onClick={() => refetch()}>
@@ -178,7 +183,6 @@ export const RefundLogHistory = () => {
     onPaginationChange: handlePaginationChange,
     onSortingChange: handleSortChange,
     onColumnFilterFnsChange: handlerFilterFnChange,
-    // onColumnFilterFnsChange: setColumnFilterFns,
     onColumnFiltersChange: handleFilterChange,
     rowCount: totalRowCount,
     enableColumnFilterModes: true,
@@ -195,15 +199,6 @@ export const RefundLogHistory = () => {
       showProgressBars: isFetching,
     },
   });
-
-  // if (isError) {
-  //   return (
-  //     <div>
-  //       <p>Ocurrió un error al cargar los datos. Por favor, intenta nuevamente.</p>
-  //       <Button onClick={() => refetch()}>Reintentar</Button>
-  //     </div>
-  //   );
-  // }
 
   return <MantineReactTable table={table} />;
 };

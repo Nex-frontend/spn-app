@@ -1,17 +1,35 @@
-import { and, asc, count, desc, eq, SQL } from 'drizzle-orm';
-import { PgColumn, PgSelect, PgTable } from 'drizzle-orm/pg-core';
+import { eq } from 'drizzle-orm';
+import { withPagination } from '~/server/core';
 import { db } from '~/server/db';
 import { refundLogs, user } from '~/server/db/spn/schema';
-import { withPagination } from '~/server/core';
+
+type FilterI = {
+  id: string;
+  value: unknown;
+}[];
+
+type FilterFnI = {
+  [x: string]: string;
+};
 
 interface PaginateProps {
-  limit?: number;
-  page?: number;
+  limit: number;
+  page: number;
   orderBy: string;
   order: 'asc' | 'desc';
+  filters: FilterI;
+  filtersFn: FilterFnI;
 }
 
-export const getRefundLogs = async ({ limit, page, orderBy, order }: PaginateProps) => {
+export const getRefundLogs = async ({
+  limit,
+  page,
+  orderBy,
+  order,
+  filters,
+  filtersFn,
+}: PaginateProps) => {
+  console.log({ filters, filtersFn });
 
   const query = db.spn
     .select({
@@ -32,8 +50,11 @@ export const getRefundLogs = async ({ limit, page, orderBy, order }: PaginatePro
     .from(refundLogs)
     .leftJoin(user, eq(refundLogs.userId, user.id))
     .$dynamic();
-
-  console.log({ orderBy });
-
-  return await withPagination(query, { page, limit, schema: refundLogs, order, orderColumn: orderBy }); 
+  return await withPagination(query, {
+    page,
+    limit,
+    schema: refundLogs,
+    order,
+    orderColumn: orderBy,
+  });
 };
