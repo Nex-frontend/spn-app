@@ -35,7 +35,10 @@ export const getRefundLogs = async ({
     .select({
       id: refundLogs.id,
       processFortnight: refundLogs.processFortnight,
-      user: user.name,
+      user: {
+        id: user.id,
+        name: user.name,
+      },
       createdAt: refundLogs.createdAt,
       rfcCreated: refundLogs.rfcCreated,
       rfcDeletedResponsabilities: refundLogs.rfcDeletedResponsabilities,
@@ -50,11 +53,20 @@ export const getRefundLogs = async ({
     .from(refundLogs)
     .leftJoin(user, eq(refundLogs.userId, user.id))
     .$dynamic();
+
+  // console.log(Object.keys(query._.selectedFields));
+
+  // globalFields = ['user.name', 'processFortnight',  .....]
+  // globalFilter = { value: 'eduardo',  globalFields: ['user.name', 'processFortnight', ...] }
+
   return await withPagination(query, {
     page,
     limit,
     schema: refundLogs,
     order,
     orderColumn: orderBy,
+    joinSchemas: { user },
+    filters,
+    filtersFn,
   });
 };

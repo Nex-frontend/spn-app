@@ -12,10 +12,10 @@ import { authClient } from '~/lib/utils/authClient';
 // const main = async () => {
 //   await authClient.signUp.email(
 //     {
-//       email: 'eduardo@gmail.com',
+//       email: 'FATIMA@gmail.com',
 //       password: '123456790',
-//       name: 'eduardo berzunza',
-//       username: 'eduardoBerzunza',
+//       name: 'fatima pacheco',
+//       username: 'fatimaPachecho',
 //     },
 //     {
 //       onError: (ctx) => {
@@ -28,7 +28,7 @@ import { authClient } from '~/lib/utils/authClient';
 //       },
 //       onSuccess: () => {
 //         console.log('successed');
-//       }
+//       },
 //     }
 //   );
 // };
@@ -60,7 +60,9 @@ async function main() {
           activeBefore: f.int({ minValue: 10, maxValue: 30 }),
           activeAfter: f.int({ minValue: 10, maxValue: 30 }),
           hasError: f.boolean(),
-          userId: f.valuesFromArray({ values: ['0FRSQbW41WbGHWBd4SRTtG9Z0cmaB3YN'] }),
+          userId: f.valuesFromArray({
+            values: ['0FRSQbW41WbGHWBd4SRTtG9Z0cmaB3YN', 'Ubfmk4N96XK6h0NgMSi9JKh3f8mKemyd'],
+          }),
           processFortnight: f.valuesFromArray({ values: ['202509', '202510', '202508', '202509'] }),
         },
         // with: {

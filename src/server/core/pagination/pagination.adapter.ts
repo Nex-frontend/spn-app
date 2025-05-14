@@ -3,9 +3,11 @@ import { AnyPgSelect, PgColumn, pgEnum, PgSelect, PgTable } from 'drizzle-orm/pg
 import { controlSiconQueries } from '~/features/controlSicon';
 import { db } from '~/server/db';
 import { refundLogs, user } from '~/server/db/spn/schema';
+import { isEmpty } from '~/shared';
 
 type SchemaI = PgTable & { id: PgColumn };
 type OrderColumnI = PgColumn | SQL | SQL.Aliased | string;
+type OrderColumnP = PgColumn | SQL | SQL.Aliased;
 type Order = 'asc' | 'desc';
 
 interface WithPaginateProps {
@@ -15,6 +17,13 @@ interface WithPaginateProps {
   filters: SQL[];
   orderColumn?: OrderColumnI;
   order: Order;
+}
+
+interface AddPaginateProps<T extends PgSelect> {
+  qb: T;
+  limit: number;
+  page: number;
+  orderColumn: OrderColumnP;
 }
 
 type OrderByProps = Pick<WithPaginateProps, 'order' | 'orderColumn' | 'schema'>;
@@ -37,25 +46,14 @@ const getOrderBy = ({ schema, order, orderColumn }: OrderByProps) => {
   return fn(schema.id);
 };
 
-const getPagination = ({
-  schema,
+const addPagination = <T extends PgSelect>({
+  qb,
+  orderColumn,
   limit,
   page,
-  orderColumn,
-  filters = [],
-  order = 'asc',
-}: WithPaginateProps) => {
+}: AddPaginateProps<T>) => {
   const offset = page <= 0 || limit <= 0 ? 0 : page * limit;
-  const orderBy = getOrderBy({ schema, order, orderColumn });
-
-  return db.spn
-    .select({ id: schema.id })
-    .from(schema)
-    .where(and(...filters))
-    .orderBy(orderBy)
-    .limit(limit)
-    .offset(offset)
-    .as('subquery');
+  return qb.orderBy(orderColumn).limit(limit).offset(offset);
 };
 
 const getCount = async ({ schema, filters = [] }: CountProps) => {
@@ -64,6 +62,7 @@ const getCount = async ({ schema, filters = [] }: CountProps) => {
     .from(schema)
     .where(and(...filters));
 };
+
 type FilterI = {
   id: string;
   value: unknown;
@@ -73,44 +72,45 @@ type FilterFnI = {
   [x: string]: string;
 };
 
+type JoinSchemas = Record<string, SchemaI>;
+
 interface Props {
   schema: SchemaI;
   limit: number;
   page: number;
-  // filters?: SQL[];
+  joinSchemas?: JoinSchemas;
   orderColumn?: OrderColumnI;
   order?: Order;
   filters?: FilterI;
   filtersFn?: FilterFnI;
 }
 
-// El deferred paginated se hace despues de todo el query, lo que puede ocasionar problemas
-//  de rendimientos en tablas con muchos joins antes de la paginacion
-//  No se intento buscar una solución por que aun no aparece el problema
-// En caso de aparecer se tiene que refactorizar este metodo withPagination
+//  Se intento con defered pagination pero se estaba complicando con
+// Filtros de otras tamblas con left joins
+//  se retomo la paginacion tradicional
+// EN dado caso de teener problemas de rendimiento mas adelante
+//  se podria modificar withPagination
 export async function withPagination<T extends PgSelect>(
   query: T,
-  { page, limit, schema, filtersFn = {}, filters = [], order = 'asc', orderColumn }: Props
-) {
-  //   return query.limit(limit).offset((page - 1) * limit);
-  const filtersSql = getFilters({ filters, filtersFn, schema });
-
-  const pagination = getPagination({
+  {
     page,
     limit,
     schema,
-    filters: filtersSql,
-    order,
+    joinSchemas,
+    filtersFn = {},
+    filters = [],
+    order = 'asc',
     orderColumn,
-  });
+  }: Props
+) {
   const orderBy = getOrderBy({ order, schema, orderColumn });
-  // TODO: Do filters options
-  const queryPaginated = query.innerJoin(pagination, eq(schema.id, pagination.id)).orderBy(orderBy);
-  //   const extra = querycito;
-  // const extra = withUsers(querycito);
+  const filtersSql = getFilters({ filters, filtersFn, schema: user, joinSchemas });
+  const queryPaginated = addPagination({ page, limit, orderColumn: orderBy, qb: query });
+  const queryFiltered = queryPaginated.where(and(...filtersSql));
+
   const [data, total] = await Promise.all([
-    queryPaginated,
-    getCount({ schema, filters: filtersSql }),
+    queryFiltered,
+    getCount({ schema: user, filters: filtersSql }),
   ]);
 
   return {
@@ -119,14 +119,13 @@ export async function withPagination<T extends PgSelect>(
       totalRowCount: total[0].count,
     },
   };
-  //   return query.limit(10);
-  //   return queryWithPagination.orderBy(asc(schema.id));
 }
 
 interface GetFiltersI {
   filters: FilterI;
   filtersFn: FilterFnI;
   schema: SchemaI;
+  joinSchemas?: JoinSchemas;
 }
 
 // filter :  { id: '', value: ''}
@@ -144,19 +143,43 @@ const methods = {
   lessThanOrEqualTo: lte,
 };
 
-const getFilters = ({ filters, filtersFn, schema }: GetFiltersI) => {
+const getFilters = ({ filters, filtersFn, schema, joinSchemas }: GetFiltersI) => {
   const filtersSQL: SQL[] = [];
+
+  //  user.name
+  //  joinsSchema = { user: user<Schema>}
 
   if (filters.length === 0) {
     return filtersSQL;
   }
 
   for (const { value, id } of filters) {
-    if (!schema.hasOwnProperty(id)) {
-      continue;
+    let currentSchema = schema;
+    let newId = id;
+
+    // TODO: Refactor this with a custom method called getJoinSchema o something like that
+    if (id.includes('.')) {
+      const idArray = id.split('.');
+
+      if (idArray.length < 2) {
+        throw new Error(`The filter ${id} can't be processed`);
+      }
+
+      const [table, field] = idArray;
+
+      if (!joinSchemas?.hasOwnProperty(table)) {
+        throw new Error(`Property ${field} don't found in the join`);
+      }
+
+      currentSchema = joinSchemas[table];
+      newId = field;
     }
 
-    const column = schema[id as keyof typeof schema]! as PgColumn;
+    if (!currentSchema.hasOwnProperty(newId)) {
+      throw new Error(`Property ${newId} don't found in the table`);
+    }
+
+    const column = currentSchema[newId as keyof typeof schema]! as PgColumn;
 
     const filterFn = filtersFn[id] ?? 'contains';
     // const methodSql = methods[filterFn] ?? like;
@@ -168,7 +191,7 @@ const getFilters = ({ filters, filtersFn, schema }: GetFiltersI) => {
     }
 
     if (typeof value !== 'string') {
-      continue;
+      throw new Error(`Value ${value} isn't a valid type`);
     }
 
     if (filterFn === 'endsWith') {
@@ -187,7 +210,7 @@ const getFilters = ({ filters, filtersFn, schema }: GetFiltersI) => {
     }
 
     if (!methods.hasOwnProperty(filterFn)) {
-      throw new Error('Se especifico un filtro no permitido');
+      throw new Error(`Filter ${filterFn} isn't allowed`);
     }
 
     filtersSQL.push(methods[filterFn as keyof typeof methods](column, value));

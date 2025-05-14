@@ -31,13 +31,10 @@ export const RefundLogHistory = () => {
         columnFilterModeOptions: ['contains', 'greaterThan', 'between'],
       },
       {
-        accessorKey: 'user',
+        accessorFn: (row: Refunds) => row?.user?.name ?? 'no user',
+        id: 'user.name',
         header: 'Usuario',
       },
-      // {
-      //   accessorKey: 'createdAt',
-      //   header: 'Fecha de Creación',
-      // },
       {
         accessorKey: 'rfcCreated',
         header: 'RFC Creados',
@@ -106,8 +103,6 @@ export const RefundLogHistory = () => {
       resetScroll: false,
     });
   };
-
-  console.log({ search });
 
   const handleFilterChange = (filters: Updater<ColumnFiltersState>) => {
     const newFilters =
@@ -180,6 +175,8 @@ export const RefundLogHistory = () => {
     manualPagination: true,
     manualSorting: true,
     manualFiltering: true,
+    enableGlobalFilter: false,
+    initialState: { showColumnFilters: true },
     onPaginationChange: handlePaginationChange,
     onSortingChange: handleSortChange,
     onColumnFilterFnsChange: handlerFilterFnChange,
