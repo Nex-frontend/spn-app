@@ -1,23 +1,6 @@
 import { repository } from '~/server/repositories';
+import { PaginateProps } from '~/shared';
 
-type FilterI = {
-  id: string;
-  value: unknown;
-}[];
-
-type FilterFnI = {
-  [x: string]: string;
-};
-
-interface Props {
-  limit: number;
-  page: number;
-  orderBy: string;
-  order: 'asc' | 'desc';
-  filters: FilterI;
-  filtersFn: FilterFnI;
-}
-
-export const getLogs = async (props: Props) => {
+export const getLogs = async (props: PaginateProps) => {
   return await repository.spn.refunds.getRefundLogs({ ...props });
 };

@@ -1,72 +1,29 @@
-import { eq } from 'drizzle-orm';
+import { eq, getTableColumns } from 'drizzle-orm';
 import { withPagination } from '~/server/core';
 import { db } from '~/server/db';
 import { refundLogs, user } from '~/server/db/spn/schema';
+import { PaginateProps } from '~/shared';
 
-type FilterI = {
-  id: string;
-  value: unknown;
-}[];
-
-type FilterFnI = {
-  [x: string]: string;
-};
-
-interface PaginateProps {
-  limit: number;
-  page: number;
-  orderBy: string;
-  order: 'asc' | 'desc';
-  filters: FilterI;
-  filtersFn: FilterFnI;
-}
-
-export const getRefundLogs = async ({
-  limit,
-  page,
-  orderBy,
-  order,
-  filters,
-  filtersFn,
-}: PaginateProps) => {
-  console.log({ filters, filtersFn });
+export const getRefundLogs = async (props: PaginateProps) => {
+  const { userId, ...columns } = getTableColumns(refundLogs);
 
   const query = db.spn
     .select({
-      id: refundLogs.id,
-      processFortnight: refundLogs.processFortnight,
+      ...columns,
       user: {
         id: user.id,
         name: user.name,
       },
-      createdAt: refundLogs.createdAt,
-      rfcCreated: refundLogs.rfcCreated,
-      rfcDeletedResponsabilities: refundLogs.rfcDeletedResponsabilities,
-      rfcDeletedEmployeeConcept: refundLogs.rfcDeletedEmployeeConcept,
-      rfcClosedTerm: refundLogs.rfcClosedTerm,
-      rfcSuccesed: refundLogs.rfcSuccesed,
-      rfcFailed: refundLogs.rfcFailed,
-      hasError: refundLogs.hasError,
-      activeBefore: refundLogs.activeBefore,
-      activeAfter: refundLogs.activeAfter,
     })
     .from(refundLogs)
-    .leftJoin(user, eq(refundLogs.userId, user.id))
+    .leftJoin(user, eq(userId, user.id))
     .$dynamic();
 
-  // console.log(Object.keys(query._.selectedFields));
-
-  // globalFields = ['user.name', 'processFortnight',  .....]
-  // globalFilter = { value: 'eduardo',  globalFields: ['user.name', 'processFortnight', ...] }
-
   return await withPagination(query, {
-    page,
-    limit,
+    ...props,
     schema: refundLogs,
-    order,
-    orderColumn: orderBy,
-    joinSchemas: { user },
-    filters,
-    filtersFn,
+    joinSchemas: {
+      user: { schema: user, fieldJoin: user.id, fieldFrom: userId, type: 'leftJoin' },
+    },
   });
 };

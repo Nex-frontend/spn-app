@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { IconRefresh } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
@@ -9,7 +9,8 @@ import {
   MRT_FilterOption,
   useMantineReactTable,
 } from 'mantine-react-table';
-import { ActionIcon, Tooltip } from '@mantine/core';
+import { MRT_Localization_ES } from 'mantine-react-table/locales/es/index.cjs';
+import { ActionIcon, Button, Tooltip } from '@mantine/core';
 import { refundQueries } from '../query';
 import { Route as RefundRoute } from '~/routes/_auth/(concepts)/refund';
 import { getRefundLogs } from '~/server/repositories/spn/refund';
@@ -17,11 +18,6 @@ import { getRefundLogs } from '~/server/repositories/spn/refund';
 type ArrayElement<T> = T extends (infer U)[] ? U : never;
 
 type Refunds = ArrayElement<Awaited<ReturnType<typeof getRefundLogs>>['data']>;
-
-// equals, not equals, between, between inclusive,
-// greater than, greater than or equal to, less than, less than or equal to,
-// empy, not empy, contains
-
 export const RefundLogHistory = () => {
   const columns = useMemo<MRT_ColumnDef<Refunds>[]>(
     () => [
@@ -38,10 +34,12 @@ export const RefundLogHistory = () => {
       {
         accessorKey: 'rfcCreated',
         header: 'RFC Creados',
+        enableColumnOrdering: true,
       },
       {
         accessorKey: 'rfcDeletedResponsabilities',
         header: 'RFC Eliminados Responsabilidades',
+        enableColumnOrdering: true,
       },
       {
         accessorKey: 'rfcDeletedEmployeeConcept',
@@ -70,6 +68,7 @@ export const RefundLogHistory = () => {
       {
         accessorKey: 'activeAfter',
         header: 'Activos Ahora',
+        enableColumnOrdering: false,
       },
     ],
     []
@@ -166,12 +165,18 @@ export const RefundLogHistory = () => {
     columns,
     data: fetchedRefunds,
     renderTopToolbarCustomActions: () => (
-      <Tooltip label="Refresh Data">
-        <ActionIcon onClick={() => refetch()}>
-          <IconRefresh />
-        </ActionIcon>
-      </Tooltip>
+      <>
+        <Tooltip label="Refresh Data">
+          <ActionIcon onClick={() => refetch()}>
+            <IconRefresh />
+          </ActionIcon>
+        </Tooltip>
+        <Button onClick={() => table.reset()}>Reset baby</Button>
+      </>
     ),
+    // enableColumnDragging: true,
+    enableColumnOrdering: true,
+    enableColumnPinning: true,
     manualPagination: true,
     manualSorting: true,
     manualFiltering: true,
@@ -181,8 +186,10 @@ export const RefundLogHistory = () => {
     onSortingChange: handleSortChange,
     onColumnFilterFnsChange: handlerFilterFnChange,
     onColumnFiltersChange: handleFilterChange,
+    localization: MRT_Localization_ES,
     rowCount: totalRowCount,
     enableColumnFilterModes: true,
+    enableColumnResizing: true,
     state: {
       columnFilterFns: search.filtersFn ?? columnsFilter,
       columnFilters: search.filters ?? [],

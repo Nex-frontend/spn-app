@@ -36,7 +36,7 @@ export const Route = createFileRoute('/_auth')({
 
 function DashboardLayout() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
-  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
+  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(false);
 
   const isLoading = useRouterState({
     select: (s) => s.isLoading,

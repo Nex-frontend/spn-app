@@ -1,35 +1,20 @@
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { serverFn } from '~/server/functions';
+import { PaginateProps } from '~/shared';
 
 export const refundKeys = {
   all: ['refund'] as const,
+  lists: () => [...refundKeys.all, 'list'] as const,
+  list: (paginateProps: PaginateProps) => [...refundKeys.lists(), { ...paginateProps }] as const,
 };
-
-type FilterI = {
-  id: string;
-  value: unknown;
-}[];
-
-type FilterFnI = {
-  [x: string]: string;
-};
-
-interface Props {
-  limit: number;
-  page: number;
-  orderBy: string;
-  order: 'asc' | 'desc';
-  filters: FilterI;
-  filtersFn: FilterFnI;
-}
 
 export const refundQueries = {
-  logs: ({ limit, page, orderBy, order, filters, filtersFn }: Props) =>
+  logs: (props: PaginateProps) =>
     queryOptions({
-      queryKey: [...refundKeys.all, limit, page, orderBy, order, filters, filtersFn],
+      queryKey: refundKeys.list(props),
       queryFn: ({ signal }) =>
         serverFn.refund.getRefundLogs({
-          data: { limit, page, orderBy, order, filters, filtersFn },
+          data: { ...props },
           signal,
         }),
       placeholderData: keepPreviousData,
