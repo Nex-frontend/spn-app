@@ -37,21 +37,22 @@ const METHODS_FILTER = {
   lessThanOrEqualTo: lte,
 };
 
-const getOrderBy = ({ schema, order, orderColumn }: OrderByProps) => {
+const getOrderBy = ({ schema, order, orderBy, joinSchemas }: OrderByProps) => {
   const fn = order === 'asc' ? asc : desc;
 
-  if (!orderColumn) {
+  if (!orderBy) {
+    console.log('no orderCOlumn');
     return fn(schema.id);
   }
 
-  if (typeof orderColumn !== 'string') {
-    return orderColumn;
+  if (typeof orderBy !== 'string') {
+    return orderBy;
   }
 
-  if (schema.hasOwnProperty(orderColumn)) {
-    return fn(schema[orderColumn as keyof typeof schema]! as PgColumn);
-  }
-  return fn(schema.id);
+  console.log({ joinSchemas });
+
+  const { currentSchema, columnName } = getFilterSchema({ id: orderBy, schema, joinSchemas });
+  return fn(currentSchema[columnName as keyof typeof currentSchema]! as PgColumn);
 };
 
 const getFilterSchema = ({ id, schema, joinSchemas }: GetFilterSchema) => {
@@ -70,7 +71,11 @@ const getFilterSchema = ({ id, schema, joinSchemas }: GetFilterSchema) => {
 
   const [table, columnName] = idArray;
 
-  if (!joinSchemas?.hasOwnProperty(columnName)) {
+  if (!joinSchemas?.hasOwnProperty(table)) {
+    throw new Error(`Table ${table} don't found in the join`);
+  }
+
+  if (!joinSchemas[table].schema?.hasOwnProperty(columnName)) {
     throw new Error(`Property ${columnName} don't found in the join`);
   }
 
@@ -154,15 +159,15 @@ export async function withPagination<T extends PgSelect>(
     limit,
     schema,
     joinSchemas,
+    orderBy,
     filtersFn = {},
     filters = [],
     order = 'asc',
-    orderColumn,
   }: WithPaginateProps
 ) {
-  const orderBy = getOrderBy({ order, schema, orderColumn });
+  const orderByFn = getOrderBy({ order, schema, orderBy, joinSchemas });
   const filtersSql = getFilters({ filters, filtersFn, schema, joinSchemas });
-  const queryPaginated = addPagination({ page, limit, orderColumn: orderBy, qb: query });
+  const queryPaginated = addPagination({ page, limit, orderColumn: orderByFn, qb: query });
   const queryFiltered = queryPaginated.where(and(...filtersSql));
 
   const [data, total] = await Promise.all([

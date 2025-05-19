@@ -11,13 +11,13 @@ export interface WithPaginateProps {
   limit: number;
   page: number;
   joinSchemas?: JoinSchemas;
-  orderColumn?: OrderColumnI;
+  orderBy?: OrderColumnI;
   order?: Order;
   filters?: FilterI;
   filtersFn?: FilterFnI;
 }
 
-export type OrderByProps = Pick<WithPaginateProps, 'order' | 'orderColumn' | 'schema'>;
+export type OrderByProps = Pick<WithPaginateProps, 'order' | 'orderBy' | 'schema' | 'joinSchemas'>;
 
 export type CountProps = Pick<WithPaginateProps, 'schema' | 'joinSchemas'> & { filters: SQL[] };
 
