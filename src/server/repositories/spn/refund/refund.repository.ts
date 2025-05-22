@@ -7,7 +7,6 @@ import { PaginateProps } from '~/shared';
 export const getRefundLogs = async (props: PaginateProps) => {
   const { userId, ...columns } = getTableColumns(refundLogs);
 
-  console.log({ ...props });
   const query = db.spn
     .select({
       ...columns,

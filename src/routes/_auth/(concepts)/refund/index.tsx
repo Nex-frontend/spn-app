@@ -24,6 +24,7 @@ export const Route = createFileRoute('/_auth/(concepts)/refund/')({
   }),
 });
 
+// TODO: Cuando se haga el log, verificar que si sea la fecha correcta, con el locale de mexico y no te UTC.
 function RouteComponent() {
   const [loading, { toggle }] = useDisclosure();
 

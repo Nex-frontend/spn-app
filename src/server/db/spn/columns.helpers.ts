@@ -1,6 +1,6 @@
 import { timestamp } from 'drizzle-orm/pg-core';
 
-export const createdAt = timestamp().defaultNow().notNull();
+export const createdAt = timestamp().notNull().defaultNow();
 
 export const timestamps = {
   createdAt,

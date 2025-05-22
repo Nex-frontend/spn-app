@@ -5,7 +5,7 @@ import { PaginateProps } from '~/shared';
 export const refundKeys = {
   all: ['refund'] as const,
   lists: () => [...refundKeys.all, 'list'] as const,
-  list: (paginateProps: PaginateProps) => [...refundKeys.lists(), { ...paginateProps }] as const,
+  list: (props: PaginateProps) => [...refundKeys.lists(), { ...props }] as const,
 };
 
 export const refundQueries = {

@@ -2,7 +2,11 @@ import * as React from 'react';
 import type { QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from '@tanstack/react-router';
+
+import 'dayjs/locale/es';
+
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+// import { es } from 'date-fns/locale';
 import mantineTablesCssUrl from 'mantine-react-table/styles.css?url';
 import {
   Button,
@@ -13,6 +17,7 @@ import {
   MantineProvider,
 } from '@mantine/core';
 import mantineCssUrl from '@mantine/core/styles.css?url';
+import datesCssUrl from '@mantine/dates/styles.css?url';
 import { Notifications } from '@mantine/notifications';
 import notificationCssUrl from '@mantine/notifications/styles.css?url';
 import { NavigationProgress } from '@mantine/nprogress';
@@ -23,6 +28,7 @@ import { DefaultCatchBoundary, NotFound } from '~/features/core';
 // import appCssUrl from '~/styles/app.css?url';
 import '~/styles/app.css';
 
+import { DatesProvider } from '@mantine/dates';
 import { Nulleable } from '~/shared';
 import linksCssUrl from '~/styles/links-groups.css?url';
 import sidebarCssUrl from '~/styles/sidebar.css?url';
@@ -59,6 +65,7 @@ export const Route = createRootRouteWithContext<{
       { rel: 'stylesheet', href: linksCssUrl },
       { rel: 'stylesheet', href: spotlightCssUrl },
       { rel: 'stylesheet', href: mantineTablesCssUrl },
+      { rel: 'stylesheet', href: datesCssUrl },
       // { rel: 'stylesheet', href: appCssUrl },
       {
         rel: 'apple-touch-icon',
@@ -102,6 +109,7 @@ function RootComponent() {
 
 const theme = createTheme({
   defaultRadius: 'md',
+  cursorType: 'pointer',
   components: {
     HoverCard: HoverCard.extend({
       defaultProps: {
@@ -132,7 +140,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <MantineProvider defaultColorScheme="dark" theme={theme}>
           <NavigationProgress />
           <Notifications position="top-right" limit={4} />
-          {children}
+          <DatesProvider settings={{ locale: 'es', firstDayOfWeek: 0, weekendDays: [0] }}>
+            {children}
+          </DatesProvider>
         </MantineProvider>
         <TanStackRouterDevtools position="bottom-right" />
         <ReactQueryDevtools buttonPosition="bottom-left" />

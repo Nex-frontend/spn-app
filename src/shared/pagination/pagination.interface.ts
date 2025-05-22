@@ -3,6 +3,7 @@ export type Order = 'asc' | 'desc';
 export type FilterI = {
   id: string;
   value: unknown;
+  key: string;
 }[];
 
 export type FilterFnI = {
