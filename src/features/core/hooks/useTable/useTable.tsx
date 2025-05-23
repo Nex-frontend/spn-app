@@ -3,7 +3,12 @@ import { IconRefresh } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import { ColumnFiltersState, PaginationState, SortingState, Updater } from '@tanstack/table-core';
-import { MRT_FilterOption, MRT_RowData, useMantineReactTable } from 'mantine-react-table';
+import {
+  MRT_ColumnDef,
+  MRT_FilterOption,
+  MRT_RowData,
+  useMantineReactTable,
+} from 'mantine-react-table';
 import { MRT_Localization_ES } from 'mantine-react-table/locales/es/index.cjs';
 import { ActionIcon, Button, Tooltip } from '@mantine/core';
 import { UseTableProps } from './useTable.interface';
@@ -34,19 +39,46 @@ const COLUMNS_REF = {
   date: COLUMNS_NUMBER_FILTER,
 };
 
-export const getColumns = (columns: any[]) => {
+type ColumnType = 'string' | 'number' | 'date' | 'boolean';
+type Column<T extends MRT_RowData> = MRT_ColumnDef<T> & { type?: ColumnType };
+
+export const getColumns = <T extends MRT_RowData>(columns: Column<T>[]) => {
   const newColumns =
     columns?.map((column) => {
       const type = column.type ?? 'string';
       const columnFilterModeOptions = COLUMNS_REF[type];
       const filterFn = type === 'string' ? 'contains' : 'equals';
 
-      return {
+      const columnTyped: Column<T> = {
         ...column,
         columnFilterModeOptions,
         filterFn,
         meta: filterFn,
       };
+
+      if (type === 'boolean') {
+        columnTyped.filterVariant = 'checkbox';
+        columnTyped.enableColumnFilterModes = false;
+        columnTyped.accessorFn = (row: T) => {
+          if (typeof columnTyped.accessorKey === 'string' && columnTyped.accessorKey in row) {
+            return row[columnTyped.accessorKey] ? 'true' : 'false';
+          }
+          return 'false';
+        };
+
+        return columnTyped;
+      }
+
+      if (type === 'date') {
+        columnTyped.filterVariant = 'date';
+        columnTyped.Cell = ({ cell }) => {
+          return cell.getValue<Date>()?.toISOString().replace(/[TZ]/g, ' ').slice(0, 19);
+        };
+
+        return columnTyped;
+      }
+
+      return columnTyped;
     }) ?? [];
 
   return newColumns;
@@ -71,10 +103,8 @@ export const useTable = <T extends MRT_RowData, F extends string>({
   fullPath,
 }: UseTableProps<T, F>) => {
   const columnsMemo = useMemo(() => getColumns(columns), []);
-  // const columnsMemo = useMemo(() => columns, []);
 
   const search = useSearch({ from });
-  // const [fil, setFil] = useState();
   const navigate = useNavigate();
 
   const columnsFilter = Object.fromEntries(
