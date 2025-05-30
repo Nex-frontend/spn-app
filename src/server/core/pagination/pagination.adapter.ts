@@ -1,8 +1,8 @@
-import { and, asc, between, count, desc, eq, gt, gte, ilike, lt, lte, ne, SQL } from 'drizzle-orm';
-import { MySqlColumnWithAutoIncrement } from 'drizzle-orm/mysql-core';
+import { and, asc, between, count, desc, eq, SQL } from 'drizzle-orm';
 import { PgColumn, PgSelect } from 'drizzle-orm/pg-core';
 import { ErrorApp } from '../errors';
 import {
+  AddFilterByColumnProps,
   AddPaginateProps,
   CountProps,
   GetFilterSchema,
@@ -10,33 +10,9 @@ import {
   OrderByProps,
   WithPaginateProps,
 } from './pagination.adapter.interface';
+import { dateFilterMap, methodsFilterMap } from './pagination.mapper';
 import { db } from '~/server/db';
 import { isEmpty } from '~/shared';
-
-// MOVE THIS METHODS IF IS NECESSARY IN CORE
-const endsWith = (column: PgColumn, value: string | Date) => {
-  return ilike(column, `%${value}`);
-};
-
-const startsWith = (column: PgColumn, value: string | Date) => {
-  return ilike(column, `${value}%`);
-};
-
-const contains = (column: PgColumn, value: string | Date) => {
-  return ilike(column, `%${value}%`);
-};
-
-const METHODS_FILTER = {
-  endsWith,
-  startsWith,
-  contains,
-  equals: eq,
-  notEquals: ne,
-  greaterThan: gt,
-  lessThan: lt,
-  greaterThanOrEqualTo: gte,
-  lessThanOrEqualTo: lte,
-};
 
 const getOrderBy = ({ schema, order, orderBy, joinSchemas }: OrderByProps) => {
   const fn = order === 'asc' ? asc : desc;
@@ -50,10 +26,11 @@ const getOrderBy = ({ schema, order, orderBy, joinSchemas }: OrderByProps) => {
   }
 
   const { currentSchema, columnName } = getFilterSchema({ id: orderBy, schema, joinSchemas });
+
   return fn(currentSchema[columnName as keyof typeof currentSchema]! as PgColumn);
 };
 
-const getFilterSchema = ({ id, schema, joinSchemas }: GetFilterSchema) => {
+const getFilterSchema = ({ id, schema, joinSchemas = {} }: GetFilterSchema) => {
   if (!id.includes('.')) {
     return {
       currentSchema: schema,
@@ -64,17 +41,17 @@ const getFilterSchema = ({ id, schema, joinSchemas }: GetFilterSchema) => {
   const idArray = id.split('.');
 
   if (idArray.length < 2) {
-    throw new Error(`The filter ${id} can't be processed`);
+    throw new Error(`El filtro ${id} no puede ser procesado`);
   }
 
   const [table, columnName] = idArray;
 
-  if (!joinSchemas?.hasOwnProperty(table)) {
-    throw new Error(`Table ${table} don't found in the join`);
+  if (!(table in joinSchemas)) {
+    throw new Error(`La tabla ${table} no existe en la consulta`);
   }
 
-  if (!joinSchemas[table].schema?.hasOwnProperty(columnName)) {
-    throw new Error(`Property ${columnName} don't found in the join`);
+  if (!(columnName in joinSchemas[table].schema)) {
+    throw new Error(`La propiedad ${columnName} no se encontró en la consulta`);
   }
 
   return {
@@ -93,74 +70,44 @@ const getFilters = ({ filters, filtersFn, schema, joinSchemas }: GetFiltersProps
   for (const { value, id } of filters) {
     const { currentSchema, columnName } = getFilterSchema({ schema, id, joinSchemas });
 
-    if (!currentSchema.hasOwnProperty(columnName)) {
-      throw ErrorApp.badRequest(`Property ${columnName} don't found in the table`);
+    if (!(columnName in currentSchema)) {
+      throw ErrorApp.badRequest(`La columna ${columnName} no se encontró en la consulta`);
     }
 
     const column = currentSchema[columnName as keyof typeof schema]! as PgColumn;
-
-    const filterFn = filtersFn[id] ?? 'contains';
-
-    // console.log({ column, filterFn });
+    const filterFn = getFilterFn(column, filtersFn[id]);
 
     if (filterFn === 'between' && Array.isArray(value)) {
       if (!value[0] || !value[1]) continue;
 
-      if (column.dataType === 'date') {
-        const start = new Date(`${value[0]}T00:00:00.000Z`);
-        const end = new Date(`${value[1]}T23:59:59.999Z`);
-
-        filtersSQL.push(between(column, start, end));
-        continue;
-      }
-
-      filtersSQL.push(between(column, value[0], value[1]));
+      const { start, end } = getBetweenData(column, value);
+      filtersSQL.push(between(column, start, end));
       continue;
     }
 
     if (typeof value !== 'string') {
-      // throw ErrorApp.badRequest(`Value ${value} isn't a valid type`);
-      continue;
+      throw ErrorApp.badRequest(`El valor ${value} no es un tipo válido`);
     }
 
     if (column.dataType === 'boolean') {
       const booleanValue = value === 'true';
-      filtersSQL.push(METHODS_FILTER['equals'](column, booleanValue));
+      filtersSQL.push(methodsFilterMap['equals'](column, booleanValue));
       continue;
     }
 
     if (column.dataType === 'date') {
-      const start = new Date(`${value}T00:00:00.000Z`);
-      const end = new Date(`${value}T23:59:59.999Z`);
-
-      if (filterFn === 'contains' || filterFn === 'equals') {
-        console.log({ start, end, value });
-        filtersSQL.push(between(column, start, end));
-        continue;
-      }
-      if (filterFn === 'greaterThan') {
-        // Si el usuario da solo la fecha, compara con el inicio del día siguiente
-        const nextDay = new Date(value);
-        nextDay.setDate(nextDay.getDate() + 1);
-        nextDay.setHours(0, 0, 0, 0);
-        filtersSQL.push(gt(column, nextDay));
-        continue;
-      }
+      const dateFilter = addDateFilter({ column, value, filterFn });
+      filtersSQL.push(dateFilter);
+      continue;
     }
 
-    const castedValue = column.dataType === 'date' ? new Date(value) : value;
-    const castedFilterFn =
-      (column.dataType === 'date' || column.dataType === 'number') && filterFn === 'contains'
-        ? 'equals'
-        : filterFn;
-
-    if (!METHODS_FILTER.hasOwnProperty(castedFilterFn)) {
-      throw ErrorApp.badRequest(`Filter ${castedFilterFn} isn't allowed`);
+    if (!(filterFn in methodsFilterMap)) {
+      throw ErrorApp.badRequest(
+        `El filtro ${filterFn} no está permitido para la columna ${columnName}`
+      );
     }
 
-    filtersSQL.push(
-      METHODS_FILTER[castedFilterFn as keyof typeof METHODS_FILTER](column, castedValue)
-    );
+    filtersSQL.push(methodsFilterMap[filterFn as keyof typeof methodsFilterMap](column, value));
   }
 
   return filtersSQL;
@@ -209,11 +156,9 @@ export async function withPagination<T extends PgSelect>(
     order = 'asc',
   }: WithPaginateProps
 ) {
-  // console.log({ filtersFn });
   const orderByFn = getOrderBy({ order, schema, orderBy, joinSchemas });
   const filtersSql = getFilters({ filters, filtersFn, schema, joinSchemas });
 
-  // console.log(filtersSql);
   const queryPaginated = addPagination({ page, limit, orderColumn: orderByFn, qb: query });
   const queryFiltered = queryPaginated.where(and(...filtersSql));
 
@@ -229,3 +174,35 @@ export async function withPagination<T extends PgSelect>(
     },
   };
 }
+
+const getDateRange = (startDate: string, endDate: string) => {
+  const start = new Date(`${startDate}T00:00:00.000Z`);
+  const end = new Date(`${endDate}T23:59:59.999Z`);
+  return { start, end };
+};
+
+const getBetweenData = (column: PgColumn, values: string[]) => {
+  if (column.dataType === 'date') {
+    return getDateRange(values[0], values[1]);
+  }
+
+  return { start: values[0], end: values[1] };
+};
+
+const addDateFilter = ({ column, value, filterFn }: AddFilterByColumnProps) => {
+  const { start, end } = getDateRange(value, value);
+
+  if (!(filterFn in dateFilterMap)) {
+    throw ErrorApp.badRequest(`El filtro ${filterFn} no está permitido para el tipo de dato fecha`);
+  }
+
+  return dateFilterMap[filterFn as keyof typeof dateFilterMap](column, start, end);
+};
+
+const getFilterFn = (column: PgColumn, filterFn?: string) => {
+  if (column.dataType !== 'string' && (filterFn === 'contains' || !filterFn)) return 'equals';
+
+  if (!filterFn) return 'contains';
+
+  return filterFn;
+};

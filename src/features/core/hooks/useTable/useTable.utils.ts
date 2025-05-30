@@ -1,14 +1,15 @@
 import { ColumnFiltersState } from '@tanstack/table-core';
-import { MRT_ColumnDef, MRT_FilterOption, MRT_RowData } from 'mantine-react-table';
+import { MRT_ColumnDef, MRT_RowData } from 'mantine-react-table';
+import { BooleanFilterTypes, NumberFilterTypes, StringFilterTypes } from '~/shared';
 
-const COLUMNS_STRING_FILTER: Array<MRT_FilterOption | string> = [
+const COLUMNS_STRING_FILTER: Array<StringFilterTypes> = [
   'startsWith',
   'endsWith',
   'contains',
   'equals',
   'notEquals',
 ];
-const COLUMNS_NUMBER_FILTER: Array<MRT_FilterOption | string> = [
+const COLUMNS_NUMBER_FILTER: Array<NumberFilterTypes> = [
   'between',
   'equals',
   'notEquals',
@@ -17,7 +18,7 @@ const COLUMNS_NUMBER_FILTER: Array<MRT_FilterOption | string> = [
   'lessThan',
   'lessThanOrEqualTo',
 ];
-const COLUMNS_BOOLEAN_FILTER: Array<MRT_FilterOption | string> = ['equals'];
+const COLUMNS_BOOLEAN_FILTER: Array<BooleanFilterTypes> = ['equals'];
 
 const COLUMNS_REF = {
   string: COLUMNS_STRING_FILTER,

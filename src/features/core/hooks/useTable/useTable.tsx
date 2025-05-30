@@ -2,12 +2,24 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import { ColumnFiltersState, PaginationState, SortingState, Updater } from '@tanstack/table-core';
-import { MRT_FilterOption, MRT_RowData, useMantineReactTable } from 'mantine-react-table';
+import {
+  MRT_FilterOption,
+  MRT_GlobalFilterTextInput,
+  MRT_ProgressBar,
+  // MRT_Paginati
+  MRT_RowData,
+  MRT_ShowHideColumnsButton,
+  MRT_TablePagination,
+  MRT_ToggleDensePaddingButton,
+  MRT_ToggleFullScreenButton,
+  MRT_ToolbarAlertBanner,
+  useMantineReactTable,
+} from 'mantine-react-table';
 import { MRT_Localization_ES } from 'mantine-react-table/locales/es/index.cjs';
-import { ActionIcon, Group, Tooltip } from '@mantine/core';
+import { ActionIcon, Flex, Group, Stack, Tooltip } from '@mantine/core';
 import { UseTableProps } from './useTable.interface';
 import { getColumns, recreateFilters } from './useTable.utils';
-import { IconRefresh, IconSettingsOff } from '~/features/ui';
+import { IconError, IconRefresh, IconSettingsOff } from '~/features/ui';
 import { EmptySearch } from '~/features/ui/components/Searchbar/EmptySearch';
 import { isEmpty, isFunction } from '~/shared';
 
@@ -32,8 +44,7 @@ export const useTable = <T extends MRT_RowData, F extends string>({
     ])
   );
 
-  console.log('columnsFilter', columnsFilter);
-  const { data, isLoading, isFetching, isError, refetch } = useQuery(getData({ ...search }));
+  const { data, isLoading, isFetching, refetch } = useQuery(getData({ ...search }));
 
   const navigateSearch = (searchParams: Partial<typeof search>) => {
     navigate({
@@ -100,20 +111,6 @@ export const useTable = <T extends MRT_RowData, F extends string>({
         <EmptySearch />
       </div>
     ),
-    renderTopToolbarCustomActions: () => (
-      <Group>
-        <Tooltip label="Refrescar tabla">
-          <ActionIcon onClick={() => refetch()} variant="light">
-            <IconRefresh />
-          </ActionIcon>
-        </Tooltip>
-        <Tooltip label="Reiniciar filtros y orden">
-          <ActionIcon onClick={handleReset} variant="light">
-            <IconSettingsOff />
-          </ActionIcon>
-        </Tooltip>
-      </Group>
-    ),
     enableColumnOrdering: true,
     enableColumnPinning: true,
     manualPagination: true,
@@ -129,14 +126,49 @@ export const useTable = <T extends MRT_RowData, F extends string>({
     rowCount: totalRowCount,
     enableColumnFilterModes: true,
     enableColumnResizing: true,
+    // columnFilterDisplayMode: 'popover',
     initialState: {
       showGlobalFilter: true,
+      showColumnFilters: true,
     },
-
     mantineSearchTextInputProps: {
       placeholder: globalFilterPlaceHolder ?? 'Buscar...',
       variant: 'default',
     },
+    mantineToolbarAlertBannerProps: !!data?.error?.message
+      ? {
+          color: 'red',
+          children: data.error.message,
+          icon: <IconError />,
+          title: 'Error al cargar los datos',
+        }
+      : undefined,
+    renderBottomToolbar: ({ table }) => (
+      <Flex justify="flex-end">
+        <MRT_TablePagination table={table} />
+      </Flex>
+    ),
+    renderTopToolbarCustomActions: () => (
+      <Flex gap="xs" align="center">
+        <Tooltip label="Refrescar tabla">
+          <ActionIcon onClick={() => refetch()} variant="light">
+            <IconRefresh />
+          </ActionIcon>
+        </Tooltip>
+        <Tooltip label="Reiniciar filtros y orden">
+          <ActionIcon onClick={handleReset} variant="light">
+            <IconSettingsOff />
+          </ActionIcon>
+        </Tooltip>
+      </Flex>
+    ),
+    renderToolbarInternalActions: ({ table }) => (
+      <Flex gap="xs" align="center">
+        <MRT_ShowHideColumnsButton table={table} />
+        <MRT_ToggleDensePaddingButton table={table} />
+        <MRT_ToggleFullScreenButton table={table} />
+      </Flex>
+    ),
     renderDetailPanel: fetchedRefunds.length === 0 ? undefined : renderDetailPanel,
     state: {
       columnFilterFns: isEmpty(search.filtersFn) ? columnsFilter : search.filtersFn,
@@ -148,7 +180,7 @@ export const useTable = <T extends MRT_RowData, F extends string>({
         pageSize: search.limit,
       },
       sorting: [{ id: search.orderBy, desc: search.order === 'desc' }],
-      showAlertBanner: isError,
+      showAlertBanner: !!data?.error,
       showProgressBars: isFetching,
     },
   });
@@ -158,7 +190,6 @@ export const useTable = <T extends MRT_RowData, F extends string>({
     search,
     isLoading,
     isFetching,
-    isError,
     refetch,
     table,
   };

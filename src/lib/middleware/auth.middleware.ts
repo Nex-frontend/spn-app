@@ -5,17 +5,22 @@ import { auth } from '~/lib/auth';
 export const authMiddleware = createMiddleware().server(async ({ next }) => {
   const { headers } = getWebRequest()!;
 
-  const session = await auth.api.getSession({
-    headers,
-    query: {
-      disableCookieCache: true,
-    },
-  });
+  try {
+    const session = await auth.api.getSession({
+      headers,
+      query: {
+        disableCookieCache: true,
+      },
+    });
 
-  if (!session) {
-    setResponseStatus(401);
-    throw new Error('Unauthorized');
+    if (!session) {
+      setResponseStatus(401);
+      throw new Error('Unauthorized');
+    }
+
+    return next({ context: { user: session.user } });
+  } catch (error) {
+    console.log('hijkodesptm ocurrio un error');
+    throw error;
   }
-
-  return next({ context: { user: session.user } });
 });

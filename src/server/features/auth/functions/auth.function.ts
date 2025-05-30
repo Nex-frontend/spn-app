@@ -3,8 +3,8 @@ import { createServerFn } from '@tanstack/react-start';
 import { getWebRequest, setHeader } from '@tanstack/react-start/server';
 import { auth as betterAuth } from '~/lib/auth';
 import { errorMiddleware } from '~/lib/middleware';
-import { LoginSchema } from '~/shared';
 import { ErrorApp } from '~/server/core';
+import { LoginSchema } from '~/shared';
 
 export const signIn = createServerFn({ method: 'POST' })
   .middleware([errorMiddleware])
@@ -32,9 +32,15 @@ export const signOut = createServerFn({ method: 'POST' }).handler(async () => {
   }
 });
 
-export const getUser = createServerFn({ method: 'GET' }).handler(async () => {
-  const { headers } = getWebRequest()!;
-  const session = await betterAuth.api.getSession({ headers });
+export const getUser = createServerFn({ method: 'GET' })
+  // .middleware([errorMiddleware])
+  .handler(async () => {
+    try {
+      const { headers } = getWebRequest()!;
+      const session = await betterAuth.api.getSession({ headers });
 
-  return session?.user || null;
-});
+      return session?.user || null;
+    } catch (error) {
+      return null;
+    }
+  });

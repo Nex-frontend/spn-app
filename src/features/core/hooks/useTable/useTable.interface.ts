@@ -37,6 +37,7 @@ export type RoutesWithPath = RouteIdWithSearchPath<RequiredSearchKeys>;
 export interface DataPagination<T extends MRT_RowData> {
   data: T[];
   meta: { totalRowCount: number };
+  error?: { message: string; code: number };
 }
 
 export type QueryKeysPagination<F extends string> = Readonly<
