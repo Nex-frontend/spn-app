@@ -1,12 +1,10 @@
-import { Suspense, useEffect } from 'react';
-import { createFileRoute, Outlet, redirect, useRouterState } from '@tanstack/react-router';
+import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 import { AppShell, Burger, Group, ScrollArea } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { nprogress } from '@mantine/nprogress';
 import { SignOutButton } from '~/features/auth';
-import { controlProcessQueries, InititalSiapsep } from '~/features/controlProcess';
-import { controlSiconQueries, InititalSicon } from '~/features/controlSicon';
-import { MainHeader, Searchbar, SideBarMenu, SkeletonBadge } from '~/features/ui';
+import { controlProcessQueries } from '~/features/controlProcess';
+import { controlSiconQueries } from '~/features/controlSicon';
+import { GroupServerBadge, MainHeader, Searchbar, SideBarMenu, SkeletonBadge } from '~/features/ui';
 
 export const Route = createFileRoute('/_auth')({
   component: DashboardLayout,
@@ -38,18 +36,6 @@ function DashboardLayout() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(false);
 
-  const isLoading = useRouterState({
-    select: (s) => s.isLoading,
-  });
-
-  useEffect(() => {
-    if (isLoading) {
-      nprogress.start();
-    }
-
-    return () => nprogress.complete();
-  }, [isLoading]);
-
   return (
     <AppShell
       header={{ height: { base: 60, md: 70, lg: 80 } }}
@@ -65,10 +51,7 @@ function DashboardLayout() {
           <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
           <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" />
           <Group visibleFrom="sm">
-            <Suspense fallback={<SkeletonBadge quantity={2} />}>
-              <InititalSicon />
-              <InititalSiapsep />
-            </Suspense>
+            <GroupServerBadge />
           </Group>
           <Searchbar />
         </Group>
@@ -78,10 +61,7 @@ function DashboardLayout() {
           hiddenFrom="sm"
           className="flex flex-row flex-wrap gap-2 justify-start items-center"
         >
-          <Suspense fallback={<SkeletonBadge quantity={2} />}>
-            <InititalSiapsep />
-            <InititalSicon />
-          </Suspense>
+          <GroupServerBadge />
         </AppShell.Section>
         <AppShell.Section grow my="md" component={ScrollArea}>
           <SideBarMenu />

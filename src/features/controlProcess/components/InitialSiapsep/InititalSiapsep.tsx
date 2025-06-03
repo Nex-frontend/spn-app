@@ -1,17 +1,13 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { BadgeFortnightSiapsep } from './BadgeFortnightSiapsep';
 import { controlProcessQueries } from '~/features/controlProcess';
-import { AppBadge, IconServerError } from '~/features/ui';
+import { ErrorServerBadge } from '~/features/ui';
 
 export const InititalSiapsep = () => {
-  const { data } = useSuspenseQuery(controlProcessQueries.fortnight());
+  const { data, refetch, isFetching } = useSuspenseQuery(controlProcessQueries.fortnight());
 
   if (data.error || !data?.online) {
-    return (
-      <AppBadge type="error" leftSection={<IconServerError size={16} />} size="lg">
-        Siapsep Offline
-      </AppBadge>
-    );
+    return <ErrorServerBadge isFetching={isFetching} refetch={refetch} label="SIAPSEP Offline" />;
   }
 
   return (

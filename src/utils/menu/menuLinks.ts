@@ -9,7 +9,7 @@ export const getMenuLinks = () => [
     label: 'Conceptos',
     icon: IconNotes,
     initiallyOpened: false,
-    matchRoute: RefundRoute.id.replace(RefundRoute.path, ''),
+    matchRoute: RefundRoute?.id?.replace(RefundRoute.path, '') ?? '',
     links: [
       { label: 'Reintegros', link: RefundRoute.to },
       { label: 'Forte', link: ForteRoute.to },

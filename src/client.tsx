@@ -7,11 +7,19 @@ import { createRouter } from './router';
 
 import './global-middleware';
 
+import { nprogress } from '@mantine/nprogress';
+
 scan({
   enabled: true,
 });
 
 const router = createRouter();
+
+router.subscribe(
+  'onBeforeLoad',
+  ({ fromLocation, pathChanged }) => fromLocation && pathChanged && nprogress.start()
+);
+router.subscribe('onLoad', () => nprogress.complete());
 
 hydrateRoot(
   document,
