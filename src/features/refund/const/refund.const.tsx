@@ -1,5 +1,7 @@
+import { IconAlertTriangle, IconCheck } from '@tabler/icons-react';
 import { RefundsLogs } from '../interfaces';
 import { Column } from '~/features/core/hooks/useTable';
+import { AppBadge, IconSuccess, IconWarning } from '~/features/ui';
 import { DEFAULT_SEARCH_VALUES } from '~/shared';
 
 export const DEFAULT_COLUMN = 'processFortnight';
@@ -66,7 +68,16 @@ export const REFUND_LOG_COLUMNS: Column<RefundsLogs>[] = [
     accessorKey: 'hasError',
     id: 'hasError',
     header: 'Error Status',
-    Cell: ({ cell }) => (cell.getValue() === 'true' ? 'Error' : 'Sin error'),
+    Cell: ({ cell }) => {
+      const value = cell.getValue() === 'true' ? 'Error' : 'Sin error';
+      const type = cell.getValue() === 'true' ? 'error' : 'success';
+
+      return (
+        <AppBadge type={type} size="md">
+          {value}
+        </AppBadge>
+      );
+    },
     type: 'boolean',
   },
   {
@@ -78,5 +89,9 @@ export const REFUND_LOG_COLUMNS: Column<RefundsLogs>[] = [
     accessorKey: 'activeAfter',
     header: 'Activos Ahora',
     type: 'number',
+  },
+  {
+    accessorKey: 'notes',
+    header: 'Notas',
   },
 ];

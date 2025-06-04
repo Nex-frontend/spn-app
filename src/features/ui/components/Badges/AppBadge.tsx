@@ -20,7 +20,7 @@ export const AppBadge = ({ type, ...restProps }: AppBadgeProps) => {
     };
 
     return colorMap[type];
-  }, []);
+  }, [type]);
 
   return <Badge {...restProps} color={color} variant="outline" />;
 };

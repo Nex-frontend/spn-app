@@ -44,6 +44,7 @@ export const refundLogs = refundSchema.table(
     hasError: boolean().default(false).notNull(),
     activeBefore: integer().default(0).notNull(),
     activeAfter: integer().default(0).notNull(),
+    notes: text().default('').notNull(),
   },
   (table) => [uniqueIndex('re_logs_consecutive').on(table.processFortnight, table.consecutive)]
 );

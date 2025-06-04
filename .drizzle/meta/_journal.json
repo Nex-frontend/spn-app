@@ -36,6 +36,13 @@
       "when": 1748371833642,
       "tag": "0004_mature_swordsman",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1749053001424,
+      "tag": "0005_little_captain_america",
+      "breakpoints": true
     }
   ]
 }

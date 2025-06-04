@@ -1,0 +1,1 @@
+ALTER TABLE "refunds"."re_logs" ADD COLUMN "notes" text DEFAULT '' NOT NULL;

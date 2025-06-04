@@ -65,6 +65,14 @@ async function main() {
             values: ['0FRSQbW41WbGHWBd4SRTtG9Z0cmaB3YN', 'Ubfmk4N96XK6h0NgMSi9JKh3f8mKemyd'],
           }),
           processFortnight: f.valuesFromArray({ values: ['202509', '202510', '202508', '202509'] }),
+          notes: f.valuesFromArray({
+            values: [
+              'No hay notas',
+              'Notas de prueba',
+              'Revisar RFC',
+              'El RFC BELE930829TS5 se tuvo que hacer manualmente',
+            ],
+          }),
         },
         // with: {
         //   refundRfcSuccess: 5,
