@@ -4,7 +4,7 @@ import BreadCrumbs from './BreadCrumbs';
 
 export const MainHeader = () => {
   const matches = useMatches().filter((match) => match.__beforeLoadContext?.crumb);
-  const title = matches[matches.length - 1].context.crumb ?? 'NO TITLE';
+  const title = matches[matches.length - 1].context.crumb ?? 'SIN TITULO';
 
   return (
     <Group justify="space-between" pb="md">

@@ -2,7 +2,7 @@ import { eq, getTableColumns } from 'drizzle-orm';
 import { getRelationalColumn, withPagination } from '~/server/core';
 import { db } from '~/server/db';
 import { refundLogs, refundRfcFailed, refundRfcSuccess, user } from '~/server/db/spn/schema';
-import { EditNotesRefundSchemaI, SearchSchemaI } from '~/shared';
+import { RefundUpdateNotesSchemaI, SearchSchemaI } from '~/shared';
 
 const getSubqueryRfcSuccess = () => {
   const subqueryRfcSuccess = db.spn
@@ -39,7 +39,7 @@ const getSubqueryRfcFailed = () => {
   });
 };
 
-export const getRefundLogs = async (props: SearchSchemaI) => {
+export const getLogs = async (props: SearchSchemaI) => {
   const { userId, ...columns } = getTableColumns(refundLogs);
 
   const rfcSuccess = getSubqueryRfcSuccess();
@@ -82,6 +82,6 @@ export const getRefundLogs = async (props: SearchSchemaI) => {
   });
 };
 
-export const updateNotes = async ({ id, notes }: EditNotesRefundSchemaI) => {
+export const updateNotes = async ({ id, notes }: RefundUpdateNotesSchemaI) => {
   return await db.spn.update(refundLogs).set({ notes }).where(eq(refundLogs.id, id));
 };

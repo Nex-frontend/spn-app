@@ -68,6 +68,7 @@ export function createRouter() {
       defaultNotFoundComponent: () => <NotFound />,
       scrollRestoration: true,
       defaultStructuralSharing: true,
+      notFoundMode: 'fuzzy',
     }),
     queryClient
   );

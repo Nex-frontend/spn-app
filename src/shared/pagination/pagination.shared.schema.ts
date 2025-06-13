@@ -14,11 +14,7 @@ const FilterSchema = v.array(
   })
 );
 const OrderSchema = v.picklist(Order);
-
 const FilterFnSchema = v.record(v.string(), v.string());
-export type FilterFnSchemaI = v.InferOutput<typeof FilterFnSchema>;
-export type FilterSchemaI = v.InferOutput<typeof FilterSchema>;
-export type OrderSchemaI = v.InferOutput<typeof OrderSchema>;
 
 export const getSearchSchema = (orderBy: string = 'id') =>
   v.object({
@@ -31,4 +27,7 @@ export const getSearchSchema = (orderBy: string = 'id') =>
     filtersFn: v.optional(v.fallback(FilterFnSchema, {}), {}),
   });
 
+export type FilterFnSchemaI = v.InferOutput<typeof FilterFnSchema>;
+export type FilterSchemaI = v.InferOutput<typeof FilterSchema>;
+export type OrderSchemaI = v.InferOutput<typeof OrderSchema>;
 export type SearchSchemaI = v.InferOutput<ReturnType<typeof getSearchSchema>>;

@@ -1,5 +1,5 @@
 import { MRT_RowData } from 'mantine-react-table';
-import { DataPagination } from '~/features/core/hooks/useTable/useTable.interface';
+import { DataPagination } from '~/features/core/hooks';
 import { handlerError } from '~/server/core/errors';
 import { SearchSchemaI } from '~/shared';
 

@@ -3,7 +3,7 @@ import { useServerFn } from '@tanstack/react-start';
 import { refundKeys } from '../query';
 import { serverFn } from '~/server/functions';
 
-export const useUpdateNotes = () => {
+export const useRefundUpdateNotes = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: useServerFn(serverFn.refund.updateNotes),

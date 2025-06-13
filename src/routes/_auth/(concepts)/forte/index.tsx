@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Outlet } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_auth/(concepts)/forte/')({
   component: RouteComponent,
@@ -13,5 +13,10 @@ export const Route = createFileRoute('/_auth/(concepts)/forte/')({
 });
 
 function RouteComponent() {
-  return <div>Hello "/_auth/forte/"!</div>;
+  return (
+    <div>
+      {' '}
+      <Outlet />
+    </div>
+  );
 }

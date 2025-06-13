@@ -1,9 +1,9 @@
 import { createServerFn } from '@tanstack/react-start';
 import { refund } from '../index';
 import { errorMiddleware } from '~/lib/middleware';
-import { EditNotesRefundSchema, RefundSearchSchema, withPaginationHandlerError } from '~/shared';
+import { RefundSearchSchema, RefundUpdateNotesSchema, withPaginationHandlerError } from '~/shared';
 
-export const getRefundLogs = createServerFn()
+export const getLogs = createServerFn()
   .validator(RefundSearchSchema)
   .handler(
     withPaginationHandlerError(async ({ data }) => {
@@ -31,7 +31,7 @@ export const getRefundLogs = createServerFn()
 
 export const updateNotes = createServerFn()
   .middleware([errorMiddleware])
-  .validator(EditNotesRefundSchema)
+  .validator(RefundUpdateNotesSchema)
   .handler(async ({ data }) => {
     await refund.cases.updateNotes(data);
     return { message: 'Nota actualizada' };

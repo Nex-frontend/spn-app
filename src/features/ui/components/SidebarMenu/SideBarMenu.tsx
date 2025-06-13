@@ -8,11 +8,7 @@ export const SideBarMenu = () => {
   const childMatches = useChildMatches();
 
   const linksN = useMemo(() => {
-    if (childMatches.length === 0) {
-      return false;
-    }
-
-    const childRoute = childMatches[0].routeId;
+    const childRoute = childMatches.length > 0 ? childMatches[0].routeId : '';
 
     return menuLinks.map((menu) => (
       <LinksGroup

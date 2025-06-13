@@ -1,6 +1,6 @@
 import { Button, Group, Text } from '@mantine/core';
 import { editNoteFormOptions } from '../form';
-import { useUpdateNotes } from '../hooks/useUpdateNotes';
+import { useRefundUpdateNotes } from '../hooks';
 import { useAppForm } from '~/features/form';
 
 export interface NotesModalProps {
@@ -17,7 +17,7 @@ export const AddNoteForm = ({
   processFortnight,
   onCancel,
 }: NotesModalProps) => {
-  const updateNotesMutation = useUpdateNotes();
+  const updateNotesMutation = useRefundUpdateNotes();
 
   const form = useAppForm({
     defaultValues: {

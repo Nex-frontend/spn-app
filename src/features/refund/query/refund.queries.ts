@@ -14,7 +14,7 @@ export const refundQueries = {
     queryOptions({
       queryKey: refundKeys.list(props),
       queryFn: ({ signal }) =>
-        serverFn.refund.getRefundLogs({
+        serverFn.refund.getLogs({
           data: { ...props },
           signal,
         }),

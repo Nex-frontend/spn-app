@@ -1,2 +1,2 @@
-export * from './getRefundLogs.case';
+export * from './getLogs.case';
 export * from './updateNotes.case';
