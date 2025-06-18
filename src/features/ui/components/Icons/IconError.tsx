@@ -1,6 +1,4 @@
 import { IconXboxX } from '@tabler/icons-react';
-import { IconAppProps } from './icon.types';
+import { withSizeIcon } from './withSizeIcon';
 
-export const IconError = (props: IconAppProps) => {
-  return <IconXboxX {...props} />;
-};
+export const IconError = withSizeIcon(IconXboxX);

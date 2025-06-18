@@ -1,6 +1,4 @@
 import { IconUpload as IconUploadTabler } from '@tabler/icons-react';
-import { IconAppProps } from './icon.types';
+import { withSizeIcon } from './withSizeIcon';
 
-export const IconUpload = (props: IconAppProps) => {
-  return <IconUploadTabler {...props} />;
-};
+export const IconUpload = withSizeIcon(IconUploadTabler);

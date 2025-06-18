@@ -13,7 +13,7 @@ export const ErrorServerBadge = ({ isFetching, refetch, label }: ErrorServerBadg
   return (
     <AppBadge
       type="error"
-      leftSection={<IconServerError size={16} />}
+      leftSection={<IconServerError />}
       size="lg"
       rightSection={
         <ActionIcon
@@ -24,7 +24,7 @@ export const ErrorServerBadge = ({ isFetching, refetch, label }: ErrorServerBadg
           loading={isFetching}
           onClick={() => refetch()}
         >
-          <IconRefresh size={16} />
+          <IconRefresh />
         </ActionIcon>
       }
     >

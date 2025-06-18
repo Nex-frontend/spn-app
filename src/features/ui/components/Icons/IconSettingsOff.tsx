@@ -1,7 +1,5 @@
 // IconAdjustmentsOff
 import { IconAdjustmentsOff } from '@tabler/icons-react';
-import { IconAppProps } from './icon.types';
+import { withSizeIcon } from './withSizeIcon';
 
-export const IconSettingsOff = (props: IconAppProps) => {
-  return <IconAdjustmentsOff {...props} />;
-};
+export const IconSettingsOff = withSizeIcon(IconAdjustmentsOff);

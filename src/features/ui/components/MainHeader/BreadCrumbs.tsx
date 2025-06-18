@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Breadcrumbs as BreadcrumbsMantine } from '@mantine/core';
 import { AppButtonLink } from '../AppLink';
 import { IconConcept, IconHome } from '../Icons';
-import { Nulleable } from '~/utils';
+import { Nulleable } from '~/shared';
 
 interface BreadCrumbsContextProps {
   context: { crumb?: string | null; iconName?: string | null };
@@ -42,7 +42,7 @@ const BreadCrumbs = ({ crumbs }: BreadCrumbsProps) => {
             variant={i === crumbs.length - 1 ? 'light' : 'subtle'}
             size="xs"
             radius="lg"
-            leftSection={Icon ? <Icon size={14} /> : null}
+            leftSection={Icon ? <Icon /> : null}
           >
             {crumb}
           </AppButtonLink>

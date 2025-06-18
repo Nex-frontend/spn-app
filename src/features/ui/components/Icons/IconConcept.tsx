@@ -1,6 +1,4 @@
 import { IconCalendarDollar } from '@tabler/icons-react';
-import { IconAppProps } from './icon.types';
+import { withSizeIcon } from './withSizeIcon';
 
-export const IconConcept = (props: IconAppProps) => {
-  return <IconCalendarDollar {...props} />;
-};
+export const IconConcept = withSizeIcon(IconCalendarDollar);

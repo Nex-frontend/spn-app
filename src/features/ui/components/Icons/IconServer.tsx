@@ -1,6 +1,4 @@
 import { IconServer as IconServerTabler } from '@tabler/icons-react';
-import { IconAppProps } from './icon.types';
+import { withSizeIcon } from './withSizeIcon';
 
-export const IconServer = (props: IconAppProps) => {
-  return <IconServerTabler {...props} />;
-};
+export const IconServer = withSizeIcon(IconServerTabler);

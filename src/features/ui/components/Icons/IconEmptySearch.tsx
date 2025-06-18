@@ -1,8 +1,4 @@
-// import { IconZoomExclamation  } from '@tabler/icons-react';
-
 import { IconInboxOff } from '@tabler/icons-react';
-import { IconAppProps } from './icon.types';
+import { withSizeIcon } from './withSizeIcon';
 
-export const IconEmptySearch = (props: IconAppProps) => {
-  return <IconInboxOff {...props} />;
-};
+export const IconEmptySearch = withSizeIcon(IconInboxOff);

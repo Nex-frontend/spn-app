@@ -1,6 +1,4 @@
 import { IconArrowLoopLeft } from '@tabler/icons-react';
-import { IconAppProps } from './icon.types';
+import { withSizeIcon } from './withSizeIcon';
 
-export const IconReturn = (props: IconAppProps) => {
-  return <IconArrowLoopLeft {...props} />;
-};
+export const IconReturn = withSizeIcon(IconArrowLoopLeft);

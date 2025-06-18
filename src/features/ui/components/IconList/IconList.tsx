@@ -28,7 +28,7 @@ export const IconList = ({ type }: Props) => {
 
   return (
     <IconWrapper color={color} size={24} radius="xl">
-      <Icon size={16} />
+      <Icon />
     </IconWrapper>
   );
 };

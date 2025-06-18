@@ -52,7 +52,6 @@ export const LinksGroup = memo(function LinksGroup({
                   <IconChevronRight
                     className={'chevron'}
                     stroke={1.5}
-                    size={16}
                     style={{
                       transform: opened ? 'rotate(-90deg)' : 'none',
                     }}

@@ -65,7 +65,7 @@ export const FeaturesCard = () => {
             <Box component="span" mr={5}>
               Features
             </Box>
-            <IconChevronDown size={16} color={theme.colors.blue[6]} />
+            <IconChevronDown color={theme.colors.blue[6]} />
           </Center>
         </a>
       </HoverCard.Target>

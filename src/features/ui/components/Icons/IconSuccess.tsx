@@ -1,6 +1,4 @@
 import { IconCircleCheck } from '@tabler/icons-react';
-import { IconAppProps } from './icon.types';
+import { withSizeIcon } from './withSizeIcon';
 
-export const IconSuccess = (props: IconAppProps) => {
-  return <IconCircleCheck {...props} />;
-};
+export const IconSuccess = withSizeIcon(IconCircleCheck);

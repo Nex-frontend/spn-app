@@ -2,6 +2,7 @@ import { Button, Group, Text } from '@mantine/core';
 import { editNoteFormOptions } from '../form';
 import { useRefundUpdateNotes } from '../hooks';
 import { useAppForm, useHandleSubmitForm } from '~/features/form';
+import { IconPlus } from '~/features/ui';
 
 export interface RefundUpdateNotesFormProps {
   id: number;
@@ -58,7 +59,11 @@ export const RefundUpdateNotesForm = ({
           Cancelar
         </Button>
         <form.AppForm>
-          <form.SubmitButton label="Agregar Notas" isSubmitting={updateNotesMutation.isPending} />
+          <form.SubmitButton
+            label="Agregar Notas"
+            isSubmitting={updateNotesMutation.isPending}
+            leftSection={<IconPlus />}
+          />
         </form.AppForm>
       </Group>
     </form>

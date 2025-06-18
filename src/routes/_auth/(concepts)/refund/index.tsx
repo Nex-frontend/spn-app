@@ -45,7 +45,7 @@ function RouteComponent() {
           loading={loading}
           onClick={toggle}
           disabled={isDisabled}
-          leftSection={<IconUpload size={14} />}
+          leftSection={<IconUpload />}
         >
           Cargar consecutivo
         </Button>

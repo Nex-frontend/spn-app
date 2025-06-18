@@ -1,6 +1,4 @@
 import { IconInfoTriangle } from '@tabler/icons-react';
-import { IconAppProps } from './icon.types';
+import { withSizeIcon } from './withSizeIcon';
 
-export const IconWarning = (props: IconAppProps) => {
-  return <IconInfoTriangle {...props} />;
-};
+export const IconWarning = withSizeIcon(IconInfoTriangle);

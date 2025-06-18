@@ -35,7 +35,7 @@ export const RefundLogHistoryTable = () => {
     },
     renderRowActionMenuItems: ({ row }) => (
       <>
-        <Menu.Item onClick={() => openModal(row.original)} leftSection={<IconEdit size={14} />}>
+        <Menu.Item onClick={() => openModal(row.original)} leftSection={<IconEdit />}>
           Editar notas
         </Menu.Item>
       </>

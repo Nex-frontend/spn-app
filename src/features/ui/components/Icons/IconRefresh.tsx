@@ -1,6 +1,4 @@
 import { IconRefresh as IconRefreshTabler } from '@tabler/icons-react';
-import { IconAppProps } from './icon.types';
+import { withSizeIcon } from './withSizeIcon';
 
-export const IconRefresh = (props: IconAppProps) => {
-  return <IconRefreshTabler {...props} />;
-};
+export const IconRefresh = withSizeIcon(IconRefreshTabler);

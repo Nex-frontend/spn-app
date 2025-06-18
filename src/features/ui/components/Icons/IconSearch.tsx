@@ -1,6 +1,4 @@
 import { IconSearch as IconSearchTabler } from '@tabler/icons-react';
-import { IconAppProps } from './icon.types';
+import { withSizeIcon } from './withSizeIcon';
 
-export const IconSearch = (props: IconAppProps) => {
-  return <IconSearchTabler {...props} />;
-};
+export const IconSearch = withSizeIcon(IconSearchTabler);
