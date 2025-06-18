@@ -7,7 +7,7 @@ import {
   refundQueries,
   useRefundAlerts,
 } from '~/features/refund';
-import { Alert, IconUpload } from '~/features/ui';
+import { IconUpload } from '~/features/ui';
 import { DEFAULT_REFUND_SEARCH, RefundSearchSchema } from '~/shared';
 
 export const Route = createFileRoute('/_auth/(concepts)/refund/')({

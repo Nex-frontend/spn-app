@@ -9,6 +9,7 @@ export const ServerBadge = (props: Props) => {
       type="success"
       size="lg"
       leftSection={<IconServer size={19} />}
+      styles={{ root: { cursor: 'pointer' } }}
       {...props}
     />
   );

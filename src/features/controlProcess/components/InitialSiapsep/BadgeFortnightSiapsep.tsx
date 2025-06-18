@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Group, HoverCard, List, Stack, Title } from '@mantine/core';
+import { Group, List, Popover, Stack, Title } from '@mantine/core';
 import { IconList, ServerBadge } from '~/features/ui';
 
 interface Props {
@@ -27,11 +27,11 @@ export const BadgeFortnightSiapsep = ({ title, fortnight, status, consecutive, e
 
   return (
     <Group justify="center">
-      <HoverCard width={280}>
-        <HoverCard.Target>
+      <Popover width={280}>
+        <Popover.Target>
           <ServerBadge type={badgeType}>{badgeText}</ServerBadge>
-        </HoverCard.Target>
-        <HoverCard.Dropdown>
+        </Popover.Target>
+        <Popover.Dropdown>
           <Stack align="flex-start" justify="center" gap="md">
             <Title order={4}>{title}</Title>
             <List spacing="xs" size="sm" center icon={Icon}>
@@ -47,8 +47,8 @@ export const BadgeFortnightSiapsep = ({ title, fortnight, status, consecutive, e
               {error && <List.Item>Error: {error}</List.Item>}
             </List>
           </Stack>
-        </HoverCard.Dropdown>
-      </HoverCard>
+        </Popover.Dropdown>
+      </Popover>
     </Group>
   );
 };

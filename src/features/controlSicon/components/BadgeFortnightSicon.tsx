@@ -1,4 +1,4 @@
-import { HoverCard, List, Stack, Title } from '@mantine/core';
+import { List, Popover, Stack, Title } from '@mantine/core';
 import { IconList, ServerBadge } from '~/features/ui';
 
 interface Props {
@@ -9,11 +9,11 @@ interface Props {
 
 export const BadgeFortnightSicon = ({ status, name, fortnight }: Props) => {
   return (
-    <HoverCard width={280}>
-      <HoverCard.Target>
+    <Popover width={280}>
+      <Popover.Target>
         <ServerBadge>{fortnight} - SICON</ServerBadge>
-      </HoverCard.Target>
-      <HoverCard.Dropdown>
+      </Popover.Target>
+      <Popover.Dropdown>
         <Stack align="flex-start" justify="center" gap="md">
           <Title order={4}>Quincena en Cargar tablas - SICON</Title>
           <List spacing="xs" size="sm" center icon={<IconList type="success" />}>
@@ -28,7 +28,7 @@ export const BadgeFortnightSicon = ({ status, name, fortnight }: Props) => {
             </List.Item>
           </List>
         </Stack>
-      </HoverCard.Dropdown>
-    </HoverCard>
+      </Popover.Dropdown>
+    </Popover>
   );
 };

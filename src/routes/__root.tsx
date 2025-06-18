@@ -18,6 +18,7 @@ import {
   mantineHtmlProps,
   MantineProvider,
   Menu,
+  Popover,
   Tooltip,
 } from '@mantine/core';
 import mantineCssUrl from '@mantine/core/styles.css?url';
@@ -113,6 +114,13 @@ const theme = createTheme({
   cursorType: 'pointer',
   components: {
     HoverCard: HoverCard.extend({
+      defaultProps: {
+        shadow: 'md',
+        withArrow: true,
+        arrowSize: 10,
+      },
+    }),
+    Popover: Popover.extend({
       defaultProps: {
         shadow: 'md',
         withArrow: true,

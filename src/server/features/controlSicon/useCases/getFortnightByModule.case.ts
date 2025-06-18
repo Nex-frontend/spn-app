@@ -11,9 +11,7 @@ const getErrorResponse = (error: string) => ({
   },
 });
 
-export const getLoadTablesFortnight = async () => {
-  const moduleName = 'cargar_tablas';
-
+export const getFortnightByModule = async (moduleName: string = 'cargar_tablas') => {
   try {
     const siconModule = await repository.sicon.modules.getFortnightByModule(moduleName);
 
