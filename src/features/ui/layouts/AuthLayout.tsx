@@ -1,8 +1,9 @@
 import { PropsWithChildren } from 'react';
 import { AppShell, Burger, Group, ScrollArea } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { GroupServerBadge, Searchbar, SideBarMenu } from '../components';
+import { Searchbar, SideBarMenu } from '../components';
 import { SignOutButton } from '~/features/auth';
+import { GroupServerBadge } from '~/features/core';
 
 interface AuthLayoutProps extends PropsWithChildren {
   className?: string;

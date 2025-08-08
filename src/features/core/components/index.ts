@@ -1,2 +1,2 @@
-export * from './DefaultCatchBoundary';
-export * from './NotFound';
+export * from './errors';
+export * from './badges';

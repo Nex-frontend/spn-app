@@ -1,8 +1,8 @@
 import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
 import { createRouter as createTanStackRouter } from '@tanstack/react-router';
 import { routerWithQueryClient } from '@tanstack/react-router-with-query';
-import { DefaultCatchBoundary } from './features/core/components/DefaultCatchBoundary';
-import { NotFound } from './features/core/components/NotFound';
+import { DefaultCatchBoundary } from './features/core/components/errors/DefaultCatchBoundary';
+import { NotFound } from './features/core/components/errors/NotFound';
 import { routeTree } from './routeTree.gen';
 import { isObject } from './shared';
 import { toast } from './utils';
