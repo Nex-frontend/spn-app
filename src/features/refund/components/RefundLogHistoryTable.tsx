@@ -5,7 +5,6 @@ import { REFUND_LOG_COLUMNS } from '../const';
 import { refundQueries } from '../query';
 import { RefundUpdateNotesForm, RefundUpdateNotesFormProps } from './RefundUpdateNotesForm';
 import RefundWrapperRfcList from './RefundWrapperRfcList';
-import { RfcRefundList } from './RfcRefundList';
 import { useTable } from '~/features/core';
 import { IconEdit } from '~/features/ui';
 import { Route as RefundRoute } from '~/routes/_auth/(concepts)/refund';
