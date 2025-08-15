@@ -1,6 +1,6 @@
 import { between, eq, gt, gte, ilike, lt, lte, ne, notBetween, SQL } from 'drizzle-orm';
 import { PgColumn } from 'drizzle-orm/pg-core';
-import { ErrorApp } from '../errors';
+import { ErrorApp } from '../../../shared/errors';
 import { DateFilterMap, MethodsFilterMap } from './pagination.service.interface';
 
 // MOVE THIS METHODS IF IS NECESSARY IN CORE

@@ -1,6 +1,5 @@
 import { and, asc, between, count, desc, eq, SQL } from 'drizzle-orm';
 import { PgColumn, PgSelect } from 'drizzle-orm/pg-core';
-import { ErrorApp } from '../errors';
 import { dateFilterMap, methodsFilterMap } from './pagination.mapper';
 import {
   AddFilterByColumnProps,
@@ -12,7 +11,7 @@ import {
   WithPaginateProps,
 } from './pagination.service.interface';
 import { db } from '~/server/db';
-import { isEmpty } from '~/shared';
+import { ErrorApp, isEmpty } from '~/shared';
 
 const getOrderBy = ({ schema, order, orderBy, joinSchemas }: OrderByProps) => {
   const fn = order === 'asc' ? asc : desc;

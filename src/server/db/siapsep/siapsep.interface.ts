@@ -9,6 +9,12 @@ export interface ExecuteProps {
   args?: (string | number)[];
 }
 
+export interface ExecuteBulkInsertProps {
+  table: string;
+  columns?: string[];
+  args: (string | number)[][];
+}
+
 export interface OdbcConnection {
   execute: ({ query, args }: ExecuteProps) => Promise<odbc.Result<unknown>>;
   executeSingle: ({ query, args }: ExecuteProps) => Promise<unknown>;

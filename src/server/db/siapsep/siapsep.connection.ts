@@ -1,7 +1,9 @@
 import odbc from 'odbc';
-import { ExecuteProps, OdbcConnection } from './siapsep.interface';
+import { ExecuteBulkInsertProps, ExecuteProps, OdbcConnection } from './siapsep.interface';
 
 import 'dotenv/config';
+
+import { ErrorApp } from '~/shared';
 
 export class SiapsepConnection implements OdbcConnection {
   private connection: odbc.Connection | undefined;
@@ -48,5 +50,36 @@ export class SiapsepConnection implements OdbcConnection {
   async executeSingle<T>(props: ExecuteProps) {
     const data = await this.prepareStatement<T>(props);
     return data[0];
+  }
+
+  async executeBulkInsert({ table, columns, args }: ExecuteBulkInsertProps) {
+    if (args.length === 0) {
+      throw ErrorApp.badRequest('No se encontro información a insertar');
+    }
+
+    const columnsList = columns ? `(${columns.join(', ')})` : '';
+    let quantity = 0;
+
+    try {
+      await this.connect();
+      await this.connection!.beginTransaction();
+
+      for (const item of args) {
+        if (item.length === 0) {
+          throw ErrorApp.badRequest(
+            'Se encontro un registro vacio al momento de insertar, favor de verificar la información'
+          );
+        }
+        const values = item.join(',');
+        await this.connection!.query(`INSERT INTO ${table} ${columnsList} VALUES(${values})`);
+        quantity += 1;
+      }
+      await this.connection!.commit();
+
+      return quantity;
+    } catch (error) {
+      await this.connection!.rollback();
+      throw error;
+    }
   }
 }

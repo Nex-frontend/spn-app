@@ -2,7 +2,8 @@ import { reset, seed } from 'drizzle-seed';
 // import { refundLogs, refundRfcSuccess } from './spn/refund.schema';
 import * as schema from './spn/schema';
 import { db_spn } from './spn/spn.connection';
-import { authClient } from '~/lib/utils/authClient';
+
+// import { authClient } from '~/lib/utils/authClient';
 
 // dotenv.config({ path: "./.env.development" });
 

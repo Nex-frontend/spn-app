@@ -1,1 +1,1 @@
-export * from './menuLinks';
+export { getMenuLinks } from './menuLinks';

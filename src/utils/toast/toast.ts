@@ -1,5 +1,4 @@
 import { toast as toastSonner } from 'sonner';
-import { notifications } from '@mantine/notifications';
 
 const error = (message: string) => {
   return toastSonner.error('Error', { description: message });

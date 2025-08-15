@@ -1,7 +1,6 @@
 import { MRT_RowData } from 'mantine-react-table';
 import { DataPagination } from '~/features/core/hooks';
-import { handlerError } from '~/server/core/errors';
-import { SearchSchemaI } from '~/shared';
+import { handlerError, SearchSchemaI } from '~/shared';
 
 export const withPaginationHandlerError = <T extends MRT_RowData>(
   handler: (ctx: { data: SearchSchemaI }) => Promise<DataPagination<T>>

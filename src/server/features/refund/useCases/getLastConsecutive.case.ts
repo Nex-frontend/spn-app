@@ -1,5 +1,5 @@
-import { ErrorApp } from '~/server/core';
 import { repository } from '~/server/repositories';
+import { ErrorApp } from '~/shared';
 
 interface ConvertFortnightI {
   consecutive: number | null;

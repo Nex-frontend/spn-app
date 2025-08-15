@@ -1,5 +1,5 @@
 import { desc, eq, getTableColumns } from 'drizzle-orm';
-import { getRelationalColumn, withPagination } from '~/server/core';
+import { core } from '~/server/core';
 import { db } from '~/server/db';
 import { refundLogs, refundRfcFailed, refundRfcSuccess, user } from '~/server/db/spn/schema';
 import { RefundUpdateNotesSchemaI, SearchSchemaI } from '~/shared';
@@ -15,7 +15,7 @@ const getSubqueryRfcSuccess = () => {
     .where(eq(refundRfcSuccess.refundLogsId, refundLogs.id))
     .$dynamic();
 
-  return getRelationalColumn({
+  return core.query.getRelationalColumn({
     subquery: subqueryRfcSuccess,
     as: 'rfcSuccess',
   });
@@ -33,7 +33,7 @@ const getSubqueryRfcFailed = () => {
     .where(eq(refundRfcFailed.refundLogsId, refundLogs.id))
     .$dynamic();
 
-  return getRelationalColumn({
+  return core.query.getRelationalColumn({
     subquery: subqueryRfcFailed,
     as: 'rfcErrors',
   });
@@ -61,7 +61,7 @@ export const getLogs = async (props: SearchSchemaI) => {
     .leftJoin(refundRfcFailed, eq(refundLogs.id, refundRfcFailed.refundLogsId))
     .$dynamic();
 
-  return await withPagination(query, {
+  return await core.pagination.withPagination(query, {
     ...props,
     schema: refundLogs,
     joinSchemas: {

@@ -1,7 +1,8 @@
 import { refund } from '..';
 import { controlProcess } from '../../controlProcessFortnight';
-import { ErrorApp } from '~/server/core';
+import { core } from '~/server/core';
 import { repository } from '~/server/repositories';
+import { ErrorApp } from '~/shared';
 
 const getServerFornitghts = async () => {
   const initialSiapsep = await controlProcess.cases.getSiapsepInitialData();
@@ -86,23 +87,6 @@ const groupByStatus = (data: Awaited<ReturnType<typeof getSiconCapture>>) => {
   return grouped;
 };
 
-const groupByRFC = (data: Awaited<ReturnType<typeof getSiconCapture>>) => {
-  const grouped = data.reduce((acc, item) => {
-    if (!item.rfc) {
-      throw ErrorApp.badRequest(`El RFC de la captura no es válido`);
-    }
-
-    if (item.rfc in acc) {
-      return acc;
-    }
-
-    acc.push(item.rfc);
-    return acc;
-  }, [] as string[]);
-
-  return grouped;
-};
-
 export const generateConsecutive = async () => {
   // 1) Verificar si las quincenas del SIAPSEP Y SICON coincidan
   const fortnights = await getServerFornitghts();
@@ -142,7 +126,7 @@ export const generateConsecutive = async () => {
   // TODO: group by status
 
   const statusGrouped = groupByStatus(data);
-  const rfcGrouped = groupByRFC(data);
+  const rfcGrouped = core.rfc.groupByRFCtoSQL(data);
 
   // return await new Promise((resolve) => setTimeout(() => resolve('holi'), 0));
   return 'holi';

@@ -3,8 +3,7 @@ import { createServerFn } from '@tanstack/react-start';
 import { getWebRequest, setHeader } from '@tanstack/react-start/server';
 import { auth as betterAuth } from '~/lib/auth';
 import { errorMiddleware } from '~/lib/middleware';
-import { ErrorApp } from '~/server/core';
-import { LoginSchema } from '~/shared';
+import { ErrorApp, LoginSchema } from '~/shared';
 
 export const signIn = createServerFn({ method: 'POST' })
   .middleware([errorMiddleware])

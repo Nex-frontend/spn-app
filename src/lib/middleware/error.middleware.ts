@@ -1,5 +1,5 @@
 import { createMiddleware } from '@tanstack/react-start';
-import { handlerError } from '~/server/core/';
+import { handlerError } from '~/shared';
 
 export const errorMiddleware = createMiddleware({ type: 'function' }).server(async ({ next }) => {
   try {
