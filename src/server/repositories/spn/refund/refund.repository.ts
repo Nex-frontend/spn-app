@@ -9,7 +9,7 @@ const getSubqueryRfcSuccess = () => {
     .select({
       rfc: refundRfcSuccess.rfc,
       type: refundRfcSuccess.type,
-      plaza: refundRfcSuccess.plaza,
+      paymentCode: refundRfcSuccess.paymentCode,
     })
     .from(refundRfcSuccess)
     .where(eq(refundRfcSuccess.refundLogsId, refundLogs.id))
@@ -27,7 +27,7 @@ const getSubqueryRfcFailed = () => {
       rfc: refundRfcFailed.rfc,
       type: refundRfcFailed.type,
       error: refundRfcFailed.error,
-      plaza: refundRfcFailed.plaza,
+      paymentCode: refundRfcFailed.paymentCode,
     })
     .from(refundRfcFailed)
     .where(eq(refundRfcFailed.refundLogsId, refundLogs.id))

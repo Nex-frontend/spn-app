@@ -6,6 +6,7 @@ export const getCaptureByIdOpenClose = async (idOpenClose: number) => {
   return await db.sicon
     .select({
       id: reEmpleadosCapturados.id,
+      uVersion: sql<string>`'#'`,
       rfc: reEmpleadosCapturados.rfc,
       payCode: sql<string>`substr(${reEmpleadosCapturados.plaza},1,2)`,
       unit: sql<string>`substr(${reEmpleadosCapturados.plaza},3,2)`,

@@ -210,13 +210,78 @@ export const generateConsecutive = async () => {
       'positionCategory',
       'hours',
       'consecutivePayment',
+      'status',
     ],
     data: rfcCodePayments,
   });
 
+  // console.log(rfcPrepared);
+
+  await repository.siapsep.rfcPaymentCodeCalculation.deleteAll();
   await repository.siapsep.rfcPaymentCodeCalculation.createMany(rfcPrepared);
+
   const currentRefunds =
     await repository.siapsep.employeePaymentCodeConcept.refunds.getCount(fortnight);
+
+  const rfcNotEPC =
+    await repository.siapsep.rfcPaymentCodeCalculation.refunds.getRfcNotEPC(fortnight);
+
+  const rfcPaymentCodeNotEPC =
+    await repository.siapsep.rfcPaymentCodeCalculation.refunds.getRfcPaymentCodeNotEPC(fortnight);
+
+  const closeVigenByRfc =
+    await repository.siapsep.employeePaymentCodeConcept.refunds.closeVigencyByRfc(
+      fortnight,
+      fortnight - 1
+    );
+
+  const closeVigenByRfcAndCode =
+    await repository.siapsep.employeePaymentCodeConcept.refunds.closeVigencyByRfcAndCode(
+      fortnight,
+      fortnight - 1
+    );
+
+  const deleteByRfc =
+    await repository.siapsep.employeePaymentCodeConcept.refunds.deleteByRfc(fortnight);
+
+  const deleteByRfcAndCode =
+    await repository.siapsep.employeePaymentCodeConcept.refunds.deleteByRfcAndCode(fortnight);
+
+  if (statusGrouped[status.create]?.length > 0) {
+    const toInsertEPC = core.rfc.prepareToSQLBulkValues({
+      columns: [
+        'uVersion',
+        'rfc',
+        'payCode',
+        'unit',
+        'subunit',
+        'positionCategory',
+        'hours',
+        'consecutivePayment',
+        'conceptType',
+        'concept',
+        'fortnightEnd',
+        'fortnightStart',
+        'monthlyAmount',
+        'document',
+        'documentDate',
+        'flag',
+        'typeFlag',
+        'applicationNumber',
+      ],
+      data: statusGrouped[status.create],
+    });
+
+    const created = await repository.siapsep.employeePaymentCodeConcept.createMany(toInsertEPC);
+  }
+
+  const lastRefunds =
+    await repository.siapsep.employeePaymentCodeConcept.refunds.getCount(fortnight);
+  // console.log({
+  //   currentRefunds,
+  //   rfcNotEPC,
+  //   rfcPaymentCodeNotEPC,
+  // });
 
   return 'holi';
 };

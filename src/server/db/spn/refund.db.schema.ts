@@ -26,12 +26,12 @@ export const refundLogs = refundSchema.table(
       .references(() => user.id),
     createdAt,
     consecutive: integer().default(1).notNull(),
-    rfcCreated: integer().default(0).notNull(),
-    rfcDeletedResponsabilities: integer().default(0).notNull(),
-    rfcDeletedEmployeeConcept: integer().default(0).notNull(),
-    rfcClosedTerm: integer().default(0).notNull(),
-    rfcSuccesed: integer().default(0).notNull(),
-    rfcFailed: integer().default(0).notNull(),
+    recordsCreated: integer().default(0).notNull(),
+    recordsDeletedResponsabilities: integer().default(0).notNull(),
+    recordsDeletedEmployeeConcept: integer().default(0).notNull(),
+    recordsClosedTerm: integer().default(0).notNull(),
+    recordsSuccesed: integer().default(0).notNull(),
+    recordsFailed: integer().default(0).notNull(),
     hasError: boolean().default(false).notNull(),
     activeBefore: integer().default(0).notNull(),
     activeAfter: integer().default(0).notNull(),
@@ -46,7 +46,7 @@ export const refundRfcSuccess = refundSchema.table('re_rfc_success', {
     .notNull()
     .references(() => refundLogs.id),
   rfc: char({ length: 13 }).notNull(),
-  plaza: char({ length: 23 }).notNull(),
+  paymentCode: char({ length: 23 }).notNull(),
   type: refundTypesEnum().notNull(),
 });
 
@@ -56,7 +56,7 @@ export const refundRfcFailed = refundSchema.table('re_rfc_failed', {
     .notNull()
     .references(() => refundLogs.id),
   rfc: char({ length: 13 }).notNull(),
-  plaza: char({ length: 23 }).notNull(),
+  paymentCode: char({ length: 23 }).notNull(),
   type: refundTypesEnum().notNull(),
   error: refundErrorsEnum().notNull(),
 });

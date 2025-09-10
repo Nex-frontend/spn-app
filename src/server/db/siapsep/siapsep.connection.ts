@@ -95,7 +95,8 @@ export class SiapsepConnection implements OdbcConnection {
           })
           .join(',');
 
-        await this.connection!.query(`INSERT INTO ${table} ${columnsList} VALUES(${values})`);
+        const queryString = `INSERT INTO ${table} ${columnsList} VALUES(${values})`;
+        await this.connection!.query(queryString);
         quantity += 1;
       }
 
