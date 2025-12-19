@@ -6,7 +6,6 @@ type Rfc = { rfc: string };
 
 const rfcCalculationFactory = (rfcTable: RfcCalculationTables) => {
   let table = rfcTable;
-  // let rfcs: Rfc[] = rfcsInitital ? [...rfcsInitital] : [];
 
   const setTable = (rfcTable: RfcCalculationTables) => {
     table = rfcTable;
@@ -14,20 +13,16 @@ const rfcCalculationFactory = (rfcTable: RfcCalculationTables) => {
 
   const getTable = () => table;
 
-  // const setRfcs = (rfcsData: Rfc[]) => {
-  //   rfcs = rfcsData;
-  // };
-
   const getRfcs = async () => {
     return await repository.siapsep.rfcCalculation.getAll(table);
   };
 
-  const insertUniqueRFCs = async (rfcs: Rfc[]) => {
+  const createUniqueRFCs = async (rfcs: Rfc[]) => {
     const rfcUniques = core.rfc.groupByRFCtoSQL(rfcs);
-    return await insertRFCs(rfcUniques);
+    return await createRFCs(rfcUniques);
   };
 
-  const insertRFCs = async (rfcs: string[][]) => {
+  const createRFCs = async (rfcs: string[][]) => {
     await repository.siapsep.rfcCalculation.deleteAll(table);
     return await repository.siapsep.rfcCalculation.createMany(table, rfcs);
   };
@@ -44,8 +39,8 @@ const rfcCalculationFactory = (rfcTable: RfcCalculationTables) => {
     deleteRfcNotInEmployee,
     getRfcNotInEmployee,
     getRfcs,
-    insertRFCs,
-    insertUniqueRFCs,
+    createRFCs,
+    createUniqueRFCs,
     setTable,
     getTable,
   };

@@ -98,8 +98,8 @@ export const updateNotes = async ({ id, notes }: RefundUpdateNotesSchemaI) => {
   return await db.spn.update(refundLogs).set({ notes }).where(eq(refundLogs.id, id));
 };
 
-export type RefundLogsInsert = InferInsertModel<typeof refundLogs>;
+export type RefundLogsCreate = InferInsertModel<typeof refundLogs>;
 
-export const createOne = async (data: RefundLogsInsert) => {
-  return await db.spn.insert(refundLogs).values(data).returning({ insertedId: refundLogs.id });
+export const createOne = async (data: RefundLogsCreate) => {
+  return await db.spn.insert(refundLogs).values(data).returning({ createdId: refundLogs.id });
 };

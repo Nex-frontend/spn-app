@@ -1,10 +1,10 @@
 import { ErrorApp } from '~/shared';
 
-interface GroupByRFCData {
+interface RfcI {
   rfc: string;
 }
 
-export const groupByRFC = (data: GroupByRFCData[]) => {
+export const groupByRFC = (data: RfcI[]) => {
   return data.reduce((acc, item) => {
     if (!item.rfc) {
       throw ErrorApp.badRequest('Se encontro un RFC vacio');
@@ -25,36 +25,11 @@ export const groupByRFC = (data: GroupByRFCData[]) => {
   }, [] as string[]);
 };
 
-export const groupByRFCtoSQL = (data: GroupByRFCData[]) => {
+export const groupByRFCtoSQL = (data: RfcI[]) => {
   return groupByRFC(data).map((data) => [data]);
 };
 
-// TODO: move this
-type NonNullableBulk<T> = T extends null ? never : T;
-
-interface PrepareToSQLBulkValuesI<T extends string | number | null> {
-  columns: string[];
-  data: Record<string, T>[];
-}
-
-export const prepareToSQLBulkValues = <
-  T extends string | number | null,
-  W extends boolean = false,
->({
-  columns,
-  data,
-  withoutNull,
-}: PrepareToSQLBulkValuesI<T> & { withoutNull?: W }) => {
-  return data.map((item) =>
-    columns.map((column) => {
-      if (!(column in item)) {
-        throw ErrorApp.badRequest(`La columna ${column} no existe en el registro`);
-      }
-      if (withoutNull && item[column] === null) {
-        throw ErrorApp.badRequest(`La columna ${column} no puede ser nula`);
-      }
-      // Si withoutNull es true, el tipo será NonNullableBulk<T>
-      return withoutNull ? (item[column] as NonNullableBulk<T>) : item[column];
-    })
-  );
+export const filterRfcs = <T extends RfcI>(data: T[], rfcToFilter: RfcI[]) => {
+  const rfcToFilterSet = new Set(rfcToFilter.map((item) => item.rfc));
+  return data.filter((item) => !rfcToFilterSet.has(item.rfc));
 };

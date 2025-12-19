@@ -39,6 +39,8 @@ export const closeVigencyByRfcAndCode = async (fortnight: number, closeFortnight
         and sp.cons_plaza = em.cons_plaza
         and em.qna_ini <= ?
         and em.qna_fin >= ? 
+        and em.concepto = '19'
+        and em.perc_ded = 'D'
         when matched then update set em.qna_fin = ?`,
     args: [fortnight, fortnight, closeFortnight],
   });
