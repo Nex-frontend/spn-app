@@ -1,7 +1,8 @@
 import { createMiddleware } from '@tanstack/react-start';
 import { handlerError } from '~/shared';
 
-export const errorMiddleware = createMiddleware({ type: 'function' }).server(async ({ next }) => {
+//request
+export const errorMiddleware = createMiddleware().server(async ({ next }) => {
   try {
     const result = await next();
     return result;

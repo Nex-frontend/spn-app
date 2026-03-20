@@ -29,7 +29,7 @@ import spotlightCssUrl from '@mantine/spotlight/styles.css?url';
 import { authQueries } from '~/features/auth';
 import { DefaultCatchBoundary, NotFound } from '~/features/core';
 // import appCssUrl from '~/styles/app.css?url';
-import '~/styles/app.css';
+import '~/global-middleware';
 
 import { DatesProvider } from '@mantine/dates';
 import { Nulleable } from '~/shared';
@@ -102,10 +102,14 @@ export const Route = createRootRouteWithContext<{
   component: RootComponent,
 });
 
+import { ClientRoot } from './ClientRoot';
+
 function RootComponent() {
   return (
     <RootDocument>
-      <Outlet />
+      <ClientRoot>
+        <Outlet />
+      </ClientRoot>
     </RootDocument>
   );
 }

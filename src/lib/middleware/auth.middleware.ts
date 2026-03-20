@@ -1,16 +1,16 @@
 import { createMiddleware } from '@tanstack/react-start';
-import { getWebRequest, setResponseStatus } from '@tanstack/react-start/server';
+import { getRequest, setResponseStatus } from '@tanstack/react-start/server';
 import { auth } from '~/lib/auth';
 
-export const authMiddleware = createMiddleware({ type: 'function' }).server(async ({ next }) => {
+export const authMiddleware = createMiddleware().server(async ({ next }) => {
   try {
-    const webRequest = getWebRequest();
-    if (!webRequest) {
+    const request = getRequest();
+    if (!request) {
       setResponseStatus(500);
       throw new Error('Internal server error');
     }
 
-    const { headers } = webRequest;
+    const { headers } = request;
 
     const session = await auth.api.getSession({
       headers,

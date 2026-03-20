@@ -1,8 +1,10 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { username } from 'better-auth/plugins';
-import { reactStartCookies } from 'better-auth/react-start';
+
 import { db } from '../server/db';
+
+// TODO: REVIEW THIS, IT SEEMS TO BE CAUSING PROBLEMS WITH VITE
 
 export const auth = betterAuth({
   database: drizzleAdapter(db.spn, {
