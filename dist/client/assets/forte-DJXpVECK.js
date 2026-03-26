@@ -1,1 +1,0 @@
-import{t as e}from"./jsx-runtime-D-oznMWL.js";import{n as t}from"./Match-CJQl35Qn.js";var n=e();function r(){return(0,n.jsx)(`div`,{children:(0,n.jsx)(t,{})})}export{r as component};

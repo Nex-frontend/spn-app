@@ -42,23 +42,17 @@ export const useTable = <T extends MRT_RowData, F extends string>({
 
   const search = useSearch({ from });
   const navigate = useNavigate({ from: fullPath });
+  // const navigate = useNavigate();
 
   const { data, isLoading, isFetching, refetch } = useQuery(getData({ ...search }));
 
   const navigateSearch = (searchParams: Partial<typeof search>) => {
     navigate({
       to: '.',
-      // search: {
-      //   ...search,
-      //   ...searchParams
-      // },
       search: (prev) => ({
         ...prev,
         ...searchParams,
       }),
-      // search: {
-      //   ...searchParams
-      // },
       replace: true,
       resetScroll: false,
     });

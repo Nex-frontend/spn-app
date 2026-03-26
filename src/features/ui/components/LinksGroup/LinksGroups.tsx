@@ -4,6 +4,7 @@ import { Collapse, Group, UnstyledButton } from '@mantine/core';
 import { AppLink } from '../AppLink/AppLink';
 import { LinkSingle } from './LinkSingle';
 import { LinkWrapper } from './LinkWrapper';
+import { linkDefaults } from '../AppLink';
 
 interface LinksGroupProps {
   icon: React.FC<any>;
@@ -11,7 +12,10 @@ interface LinksGroupProps {
   initiallyOpened?: boolean;
   link?: string;
   matchRoute?: string;
-  links?: { label: string; link: string }[];
+  links?: { 
+    label: string; 
+    link: string;
+  }[];
 }
 
 export const LinksGroup = memo(function LinksGroup({
@@ -35,6 +39,7 @@ export const LinksGroup = memo(function LinksGroup({
           fontWeight: 'bold',
         },
       }}
+      { ...linkDefaults } 
     >
       {link.label}
     </AppLink>

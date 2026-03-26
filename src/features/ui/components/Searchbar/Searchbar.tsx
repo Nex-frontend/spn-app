@@ -4,6 +4,7 @@ import { Spotlight, spotlight } from '@mantine/spotlight';
 import { AppSpotlightLink } from '../AppLink';
 import { IconConcept, IconHome, IconSearch } from '../Icons';
 import { EmptySearch } from './EmptySearch';
+import { DEFAULT_REFUND_SEARCH } from '~/shared';
 
 interface Action {
   id: string;
@@ -12,6 +13,8 @@ interface Action {
   to: string;
   leftSection: React.ReactNode;
   group: string;
+  search?: any;
+  params?: any;
 }
 
 const actions: Action[] = [
@@ -30,6 +33,7 @@ const actions: Action[] = [
     to: '/refund',
     leftSection: <IconConcept size={24} stroke={1.5} />,
     group: 'conceptos',
+    search: DEFAULT_REFUND_SEARCH,
   },
   {
     id: 'forte',
@@ -74,6 +78,8 @@ export function Searchbar() {
             leftSection={action.leftSection}
             highlightQuery
             to={action.to}
+            search={action.search}
+            params={action.params}
           />
         ))}
       </Spotlight.ActionsGroup>

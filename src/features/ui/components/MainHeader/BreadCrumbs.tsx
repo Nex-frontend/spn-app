@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import { Breadcrumbs as BreadcrumbsMantine } from '@mantine/core';
-import { AppButtonLink } from '../AppLink';
+import { AppButtonLink, linkDefaults } from '../AppLink';
 import { IconConcept, IconHome } from '../Icons';
 import { Nulleable } from '~/shared';
 
 interface BreadCrumbsContextProps {
-  context: { crumb?: string | null; iconName?: string | null };
+  context: { crumb?: string | null; iconName?: string | null; };
   pathname: string;
 }
 
@@ -43,6 +43,7 @@ const BreadCrumbs = ({ crumbs }: BreadCrumbsProps) => {
             size="xs"
             radius="lg"
             leftSection={Icon ? <Icon /> : null}
+            { ...linkDefaults } 
           >
             {crumb}
           </AppButtonLink>

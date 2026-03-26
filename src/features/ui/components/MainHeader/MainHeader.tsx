@@ -3,7 +3,7 @@ import { Group, Title } from '@mantine/core';
 import BreadCrumbs from './BreadCrumbs';
 
 export const MainHeader = () => {
-  const matches = useMatches().filter((match) => match.__beforeLoadContext?.crumb);
+  const matches = useMatches().filter((match) => match.context?.crumb);
   const title = matches[matches.length - 1].context.crumb ?? 'SIN TITULO';
 
   return (

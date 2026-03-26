@@ -1,1 +1,0 @@
-import{t as e}from"./jsx-runtime-D-oznMWL.js";var t=e();function n(){return(0,t.jsxs)(`div`,{children:[`Hello `,(0,t.jsx)(`span`,{className:`font-bold`,children:`Hoisliwis`})]})}export{n as component};
