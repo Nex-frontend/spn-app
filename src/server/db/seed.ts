@@ -43,7 +43,7 @@ const main = async () => {
     await auth.api.signUpEmail({
       body: {
         email: "odraude28@live.com.mx",
-        password: "123456789",
+        password: "12345678",
         name: "eduardo",
         username: "eduardo",
       },
@@ -136,4 +136,4 @@ async function main2() {
   }
 }
 
-main2();
+await main();
