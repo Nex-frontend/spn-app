@@ -7,7 +7,7 @@ export const Route = createFileRoute('/_auth/kardex/')({
 })
 
 function RouteComponent() {
-  const [formValues, setFormValues] = React.useState({ rfc: '' })
+  const [formValues, setFormValues] = React.useState({ rfc: '', qna_fin: '' })
 
   return (
     <div>

@@ -13,7 +13,7 @@ export const KardexList = ({ formValues }: KardexListProps) => {
   )
 
   if (!formValues.rfc.trim()) {
-    return <p>Ingresa un RFC y presiona Buscar para ver resultados.</p>
+    return <p>Ingresa un RFC (parcial) y opcionalmente Qna Fin, luego presiona Buscar para ver resultados.</p>
   }
 
   if (isLoading) {
@@ -25,7 +25,7 @@ export const KardexList = ({ formValues }: KardexListProps) => {
   }
 
   if (!data || data.length === 0) {
-    return <p>No se encontraron registros para el RFC: {formValues.rfc}</p>
+    return <p>No se encontraron registros para el RFC: {formValues.rfc}{formValues.qna_fin ? ` y Qna Fin: ${formValues.qna_fin}` : ''}</p>
   }
 
   return (

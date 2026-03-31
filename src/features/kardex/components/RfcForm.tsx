@@ -6,19 +6,20 @@ import { KardexSearchByRFC } from "~/shared";
 
 
 interface RfcFormProps {
-  formValues: { rfc: string }
-  setFormValues: React.Dispatch<React.SetStateAction<{ rfc: string }>>
+    formValues: { rfc: string; qna_fin?: string }
+    setFormValues: React.Dispatch<React.SetStateAction<{ rfc: string; qna_fin?: string }>>
 }
 
 export const RfcForm = ({ formValues, setFormValues }: RfcFormProps) => {
-    
+
     const { isLoading } = useQuery(
         kardexQueries.rfcSearch(formValues)
     );
 
     const form = useAppForm({
         defaultValues: {
-            rfc: ''
+            rfc: '',
+            qna_fin: ''
         },
         validators: {
             onDynamic: KardexSearchByRFC
@@ -38,6 +39,13 @@ export const RfcForm = ({ formValues, setFormValues }: RfcFormProps) => {
                 {
                     (field) => (
                         <field.TextField label="RFC" placeholder="Escribe tu RFC" required />
+                    )
+                }
+            </form.AppField>
+            <form.AppField name="qna_fin">
+                {
+                    (field) => (
+                        <field.TextField label="Qna Fin" placeholder="Opcional: Qna Fin" />
                     )
                 }
             </form.AppField>
