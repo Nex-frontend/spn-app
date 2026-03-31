@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  informix:
+    # Informix 14.10 database service for production backup restoration
+    image: icr.io/informix/informix-developer-database:latest
+    container_name: informix1410
+    restart: always
+    ports:
+      - '9088:9088' # Informix default port
+    volumes:
+      - informix_data:/opt/informix/data # Persist Informix data
+      - ./backups:/opt/informix/backups # Mount local backups directory
+    environment:
+      - LICENSE=accept # Accept Informix license
+      - INFORMIXDIR=/opt/informix
+      - INFORMIX_HOME=/opt/informix
+    networks:
+      - informix-network
+
+volumes:
+  # Define named volumes that can be used by services
+  informix_data: # Named volume used to persist Informix data outside the container
+
+networks:
+  # Define networks for service communication
+  informix-network:
+    driver: bridge

@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mysql:
+    # MySQL 8.0 database service for SICON
+    image: mysql:8.0
+    container_name: mysql_sicon
+    restart: always
+    ports:
+      - '3306:3306' # MySQL default port
+    volumes:
+      - mysql_data:/var/lib/mysql # Persist MySQL data
+      - ./backups:/var/backups # Mount local backups directory
+    environment:
+      - MYSQL_ROOT_PASSWORD=root # Root password (change this!)
+      - MYSQL_DATABASE=sicon # Create database on startup
+      - MYSQL_USER=sicon_user # Create user
+      - MYSQL_PASSWORD=sicon_password # User password (change this!)
+    networks:
+      - sicon-network
+
+volumes:
+  # Define named volumes that can be used by services
+  mysql_data: # Named volume used to persist MySQL data outside the container
+
+networks:
+  # Define networks for service communication
+  sicon-network:
+    driver: bridge
