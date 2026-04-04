@@ -15,3 +15,6 @@ export * from './IconEdit';
 export * from './IconReturn';
 export * from './IconUpload';
 export * from './IconPlus';
+export * from './IconUsers';
+export * from './IconControl';
+export * from './IconChart';

@@ -10,6 +10,7 @@ import {
 import { DEFAULT_REFUND_SEARCH, RefundSearchSchema } from '~/shared';
 
 export const Route = createFileRoute('/_auth/(concepts)/refund/')({
+  ssr: 'data-only',
   component: RouteComponent,
   validateSearch: RefundSearchSchema,
   beforeLoad: async ({ context, search }) => {

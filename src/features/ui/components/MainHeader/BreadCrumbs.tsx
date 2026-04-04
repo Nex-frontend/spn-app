@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Breadcrumbs as BreadcrumbsMantine } from '@mantine/core';
 import { AppButtonLink, linkDefaults } from '../AppLink';
-import { IconConcept, IconHome } from '../Icons';
+import { IconConcept, IconHome, IconControl, IconUsers, IconChart } from '../Icons';
 import { Nulleable } from '~/shared';
 
 interface BreadCrumbsContextProps {
@@ -18,6 +18,9 @@ export type IconNameI = keyof typeof ICONS;
 const ICONS = {
   home: IconHome,
   concept: IconConcept,
+  control: IconControl,
+  employees: IconUsers,
+  chart: IconChart,
 };
 
 const getIcon = (iconName: Nulleable<string>) => {

@@ -5,7 +5,7 @@ import { createRootRouteWithContext, HeadContent, Outlet, Scripts, useRouterStat
 import { Toaster } from 'sonner';
 import { ModalsProvider } from '@mantine/modals';
 
-import 'dayjs/locale/es';
+// import 'dayjs/locale/es';
 
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import mantineTablesCssUrl from 'mantine-react-table/styles.css?url';

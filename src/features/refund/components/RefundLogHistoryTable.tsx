@@ -1,4 +1,4 @@
-import { MantineReactTable } from 'mantine-react-table';
+import { MantineReactTable, useMantineReactTable } from 'mantine-react-table';
 import { Group, Menu } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { REFUND_LOG_COLUMNS } from '../const';
@@ -9,6 +9,8 @@ import { useTable } from '~/features/core';
 import { IconEdit } from '~/features/ui';
 import { Route as RefundRoute } from '~/routes/_auth/(concepts)/refund';
 import { DEFAULT_REFUND_SEARCH } from '~/shared';
+
+import { ClientOnly } from '@tanstack/react-router';
 
 type OpenNodeModalProps = Omit<RefundUpdateNotesFormProps, 'onCancel'>;
 
@@ -46,9 +48,10 @@ export const RefundLogHistoryTable = () => {
     ),
   });
 
+
   return (
-    <>
+    <ClientOnly fallback={null}>
       <MantineReactTable table={table} />
-    </>
+    </ClientOnly>
   );
 };

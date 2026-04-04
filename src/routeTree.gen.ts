@@ -12,8 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SigninRouteImport } from './routes/signin'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AuthIndexRouteImport } from './routes/_auth/index'
-import { Route as AuthKardexIndexRouteImport } from './routes/_auth/kardex/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AuthsiapsepControlCoverIndexRouteImport } from './routes/_auth/(siapsep)/controlCover/index'
+import { Route as AuthsiapsepCaptureIndexRouteImport } from './routes/_auth/(siapsep)/capture/index'
+import { Route as AuthkardexEmployeesIndexRouteImport } from './routes/_auth/(kardex)/employees/index'
 import { Route as AuthconceptsRefundIndexRouteImport } from './routes/_auth/(concepts)/refund/index'
 import { Route as AuthconceptsForteIndexRouteImport } from './routes/_auth/(concepts)/forte/index'
 
@@ -31,16 +33,28 @@ const AuthIndexRoute = AuthIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthRoute,
 } as any)
-const AuthKardexIndexRoute = AuthKardexIndexRouteImport.update({
-  id: '/kardex/',
-  path: '/kardex/',
-  getParentRoute: () => AuthRoute,
-} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthsiapsepControlCoverIndexRoute =
+  AuthsiapsepControlCoverIndexRouteImport.update({
+    id: '/(siapsep)/controlCover/',
+    path: '/controlCover/',
+    getParentRoute: () => AuthRoute,
+  } as any)
+const AuthsiapsepCaptureIndexRoute = AuthsiapsepCaptureIndexRouteImport.update({
+  id: '/(siapsep)/capture/',
+  path: '/capture/',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthkardexEmployeesIndexRoute =
+  AuthkardexEmployeesIndexRouteImport.update({
+    id: '/(kardex)/employees/',
+    path: '/employees/',
+    getParentRoute: () => AuthRoute,
+  } as any)
 const AuthconceptsRefundIndexRoute = AuthconceptsRefundIndexRouteImport.update({
   id: '/(concepts)/refund/',
   path: '/refund/',
@@ -56,17 +70,21 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthIndexRoute
   '/signin': typeof SigninRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/kardex/': typeof AuthKardexIndexRoute
   '/forte/': typeof AuthconceptsForteIndexRoute
   '/refund/': typeof AuthconceptsRefundIndexRoute
+  '/employees/': typeof AuthkardexEmployeesIndexRoute
+  '/capture/': typeof AuthsiapsepCaptureIndexRoute
+  '/controlCover/': typeof AuthsiapsepControlCoverIndexRoute
 }
 export interface FileRoutesByTo {
   '/signin': typeof SigninRoute
   '/': typeof AuthIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/kardex': typeof AuthKardexIndexRoute
   '/forte': typeof AuthconceptsForteIndexRoute
   '/refund': typeof AuthconceptsRefundIndexRoute
+  '/employees': typeof AuthkardexEmployeesIndexRoute
+  '/capture': typeof AuthsiapsepCaptureIndexRoute
+  '/controlCover': typeof AuthsiapsepControlCoverIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -74,9 +92,11 @@ export interface FileRoutesById {
   '/signin': typeof SigninRoute
   '/_auth/': typeof AuthIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/_auth/kardex/': typeof AuthKardexIndexRoute
   '/_auth/(concepts)/forte/': typeof AuthconceptsForteIndexRoute
   '/_auth/(concepts)/refund/': typeof AuthconceptsRefundIndexRoute
+  '/_auth/(kardex)/employees/': typeof AuthkardexEmployeesIndexRoute
+  '/_auth/(siapsep)/capture/': typeof AuthsiapsepCaptureIndexRoute
+  '/_auth/(siapsep)/controlCover/': typeof AuthsiapsepControlCoverIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -84,20 +104,32 @@ export interface FileRouteTypes {
     | '/'
     | '/signin'
     | '/api/auth/$'
-    | '/kardex/'
     | '/forte/'
     | '/refund/'
+    | '/employees/'
+    | '/capture/'
+    | '/controlCover/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/signin' | '/' | '/api/auth/$' | '/kardex' | '/forte' | '/refund'
+  to:
+    | '/signin'
+    | '/'
+    | '/api/auth/$'
+    | '/forte'
+    | '/refund'
+    | '/employees'
+    | '/capture'
+    | '/controlCover'
   id:
     | '__root__'
     | '/_auth'
     | '/signin'
     | '/_auth/'
     | '/api/auth/$'
-    | '/_auth/kardex/'
     | '/_auth/(concepts)/forte/'
     | '/_auth/(concepts)/refund/'
+    | '/_auth/(kardex)/employees/'
+    | '/_auth/(siapsep)/capture/'
+    | '/_auth/(siapsep)/controlCover/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -129,19 +161,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/_auth/kardex/': {
-      id: '/_auth/kardex/'
-      path: '/kardex'
-      fullPath: '/kardex/'
-      preLoaderRoute: typeof AuthKardexIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_auth/(siapsep)/controlCover/': {
+      id: '/_auth/(siapsep)/controlCover/'
+      path: '/controlCover'
+      fullPath: '/controlCover/'
+      preLoaderRoute: typeof AuthsiapsepControlCoverIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/(siapsep)/capture/': {
+      id: '/_auth/(siapsep)/capture/'
+      path: '/capture'
+      fullPath: '/capture/'
+      preLoaderRoute: typeof AuthsiapsepCaptureIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/(kardex)/employees/': {
+      id: '/_auth/(kardex)/employees/'
+      path: '/employees'
+      fullPath: '/employees/'
+      preLoaderRoute: typeof AuthkardexEmployeesIndexRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/_auth/(concepts)/refund/': {
       id: '/_auth/(concepts)/refund/'
@@ -162,16 +208,20 @@ declare module '@tanstack/react-router' {
 
 interface AuthRouteChildren {
   AuthIndexRoute: typeof AuthIndexRoute
-  AuthKardexIndexRoute: typeof AuthKardexIndexRoute
   AuthconceptsForteIndexRoute: typeof AuthconceptsForteIndexRoute
   AuthconceptsRefundIndexRoute: typeof AuthconceptsRefundIndexRoute
+  AuthkardexEmployeesIndexRoute: typeof AuthkardexEmployeesIndexRoute
+  AuthsiapsepCaptureIndexRoute: typeof AuthsiapsepCaptureIndexRoute
+  AuthsiapsepControlCoverIndexRoute: typeof AuthsiapsepControlCoverIndexRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthIndexRoute: AuthIndexRoute,
-  AuthKardexIndexRoute: AuthKardexIndexRoute,
   AuthconceptsForteIndexRoute: AuthconceptsForteIndexRoute,
   AuthconceptsRefundIndexRoute: AuthconceptsRefundIndexRoute,
+  AuthkardexEmployeesIndexRoute: AuthkardexEmployeesIndexRoute,
+  AuthsiapsepCaptureIndexRoute: AuthsiapsepCaptureIndexRoute,
+  AuthsiapsepControlCoverIndexRoute: AuthsiapsepControlCoverIndexRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)

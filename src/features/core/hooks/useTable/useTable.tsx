@@ -18,6 +18,7 @@ import { IconError, IconRefresh, IconSettingsOff } from '~/features/ui';
 import { EmptySearch } from '~/features/ui/components/Searchbar/EmptySearch';
 import { isEmpty, isFunction } from '~/shared';
 
+
 export const useTable = <T extends MRT_RowData, F extends string>({
   columns,
   from,
@@ -38,7 +39,8 @@ export const useTable = <T extends MRT_RowData, F extends string>({
       columnsTyped,
       columnsFilter,
     };
-  }, []);
+  }, [columns]);
+
 
   const search = useSearch({ from });
   const navigate = useNavigate({ from: fullPath });
@@ -70,9 +72,12 @@ export const useTable = <T extends MRT_RowData, F extends string>({
   };
 
   const handleFilterChange = (filters: Updater<ColumnFiltersState>) => {
+
     const newFilters = isFunction(filters)
-      ? filters(search.filters ? [...search.filters] : [])
-      : filters;
+    ? filters(search.filters ? [...search.filters] : [])
+    : filters;
+    
+    if(search.filters.length === 0 && newFilters.length === 0) return;
 
     const refreshFilters = recreateFilters(newFilters);
     navigateSearch({ filters: [...refreshFilters] });
@@ -92,7 +97,9 @@ export const useTable = <T extends MRT_RowData, F extends string>({
   };
 
   const handleGlobalFilterChange = (value: string) => {
-    navigateSearch({ gFilter: value });
+    const valueCasted =  !value ? '' : value;
+    search.gFilter !== valueCasted 
+      && navigateSearch({ gFilter: value });
   };
 
   const fetchedData = data?.data ?? [];
