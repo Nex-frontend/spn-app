@@ -15,6 +15,7 @@ services:
       - LICENSE=accept # Accept Informix license
       - INFORMIXDIR=/opt/informix
       - INFORMIX_HOME=/opt/informix
+      - DBSERVERNAME=informix
     networks:
       - informix-network
 
