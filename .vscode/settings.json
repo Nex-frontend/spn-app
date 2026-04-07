@@ -19,4 +19,5 @@
     "typescriptreact"
   ],
   "editor.codeActions.triggerOnFocusChange": true,
+  "codeium.aggressiveShutdown": true,
 }
