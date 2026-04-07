@@ -42,10 +42,10 @@ const main = async () => {
     // Crear usuario por defecto
     await auth.api.signUpEmail({
       body: {
-        email: "test@example.com",
-        password: "password123",
-        name: "Test User",
-        username: "testuser",
+        email: "odraude28@live.com.mx",
+        password: "123456789",
+        name: "eduardo",
+        username: "eduardo",
       },
     });
 
